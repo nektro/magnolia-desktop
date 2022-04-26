@@ -8,6 +8,7 @@ pub const Display = struct {
     screen: *c.Screen,
 
     pub fn init() !Display {
+        // TODO: handle C error
         const disp = c.XOpenDisplay(null).?;
         const sid = DefaultScreen(disp);
 
@@ -19,6 +20,7 @@ pub const Display = struct {
     }
 
     pub fn deinit(self: Display) void {
+        // TODO: investigate possible return values
         _ = c.XCloseDisplay(self.display);
     }
 

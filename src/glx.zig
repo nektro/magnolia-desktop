@@ -23,3 +23,37 @@ pub fn isAtLeast(xdisplay: x.Display, major: usize, minor: usize) bool {
     const vers = version(xdisplay) orelse return false;
     return input.order(vers) != .gt;
 }
+
+pub const Visual = struct {
+    visual: *c.XVisualInfo,
+
+    // zig fmt: off
+    var attribs = [_]c.GLint{
+        c.GLX_RGBA,
+        c.GLX_DOUBLEBUFFER,
+        c.GLX_DEPTH_SIZE,     24,
+        c.GLX_STENCIL_SIZE,   8,
+        c.GLX_RED_SIZE,       8,
+        c.GLX_GREEN_SIZE,     8,
+        c.GLX_BLUE_SIZE,      8,
+        c.GLX_SAMPLE_BUFFERS, 0,
+        c.GLX_SAMPLES,        0,
+        c.None
+    };
+    // zig fmt: on
+
+    pub fn init(xdisplay: x.Display) !Visual {
+        // TODO: handle C error
+        const vis = c.glXChooseVisual(xdisplay.display, xdisplay.screenId, &attribs);
+        if (vis == null) return error.TODO;
+
+        return Visual{
+            .visual = vis,
+        };
+    }
+
+    pub fn deinit(self: Visual) void {
+        // TODO: investigate possible return values
+        _ = c.XFree(self.visual);
+    }
+};

@@ -18,34 +18,19 @@ pub fn main() !void {
     std.log.debug("GLX version: {d}.{d}", .{ glxv.major, glxv.minor });
 
     // GLX, create XVisualInfo, this is the minimum visuals we want
-    // zig fmt: off
-    var glxAttribs = [_]c.GLint{
-        c.GLX_RGBA,
-        c.GLX_DOUBLEBUFFER,
-        c.GLX_DEPTH_SIZE,     24,
-        c.GLX_STENCIL_SIZE,   8,
-        c.GLX_RED_SIZE,       8,
-        c.GLX_GREEN_SIZE,     8,
-        c.GLX_BLUE_SIZE,      8,
-        c.GLX_SAMPLE_BUFFERS, 0,
-        c.GLX_SAMPLES,        0,
-        c.None
-    };
-    // zig fmt: on
-    const visual = c.glXChooseVisual(xdisplay.display, xdisplay.screenId, &glxAttribs);
-    defer _ = c.XFree(visual);
-    if (visual == null) return;
+    const xvisual = try mag.glx.Visual.init(xdisplay);
+    defer xvisual.deinit();
 
     // Open the window
     var windowAttribs: c.XSetWindowAttributes = undefined;
     windowAttribs.border_pixel = xdisplay.blackPixel();
     windowAttribs.background_pixel = xdisplay.whitePixel();
     windowAttribs.override_redirect = 1;
-    windowAttribs.colormap = c.XCreateColormap(xdisplay.display, xdisplay.rootWindow(), visual.*.visual, c.AllocNone);
+    windowAttribs.colormap = c.XCreateColormap(xdisplay.display, xdisplay.rootWindow(), xvisual.visual.*.visual, c.AllocNone);
     windowAttribs.event_mask = c.ExposureMask;
     defer _ = c.XFreeColormap(xdisplay.display, windowAttribs.colormap);
 
-    const window = c.XCreateWindow(xdisplay.display, xdisplay.rootWindow(), 0, 0, 320, 200, 0, visual.*.depth, c.InputOutput, visual.*.visual, c.CWBackPixel | c.CWColormap | c.CWBorderPixel | c.CWEventMask, &windowAttribs);
+    const window = c.XCreateWindow(xdisplay.display, xdisplay.rootWindow(), 0, 0, 320, 200, 0, xvisual.visual.*.depth, c.InputOutput, xvisual.visual.*.visual, c.CWBackPixel | c.CWColormap | c.CWBorderPixel | c.CWEventMask, &windowAttribs);
     defer _ = c.XDestroyWindow(xdisplay.display, window);
 
     // Redirect Close
@@ -53,7 +38,7 @@ pub fn main() !void {
     _ = c.XSetWMProtocols(xdisplay.display, window, &atomWmDeleteWindow, 1);
 
     // Create GLX OpenGL context
-    const context = c.glXCreateContext(xdisplay.display, visual, null, 1);
+    const context = c.glXCreateContext(xdisplay.display, xvisual.visual, null, 1);
     defer c.glXDestroyContext(xdisplay.display, context);
     _ = c.glXMakeCurrent(xdisplay.display, window, context);
 

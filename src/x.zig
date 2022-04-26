@@ -96,4 +96,15 @@ pub const Window = struct {
         _ = c.XFreeColormap(self.display, self.attribs.colormap);
         _ = c.XDestroyWindow(self.display, self.window);
     }
+
+    pub fn enableEvents(self: Window) !void {
+        const mask_keys = c.KeymapStateMask | c.KeyPressMask | c.KeyReleaseMask;
+        const mask_btns = c.ButtonPressMask | c.ButtonReleaseMask;
+        const mask_mouse = c.PointerMotionMask;
+        const mask_focus = c.EnterWindowMask | c.LeaveWindowMask;
+        const mask = mask_keys | mask_btns | mask_mouse | mask_focus;
+
+        // TODO: handle C error
+        _ = c.XSelectInput(self.display, self.window, c.ExposureMask | mask);
+    }
 };

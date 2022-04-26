@@ -30,8 +30,7 @@ pub fn main() !void {
     std.log.debug("GL Version: {s}", .{c.glGetString(c.GL_VERSION)});
     std.log.debug("GL Shading Language: {s}", .{c.glGetString(c.GL_SHADING_LANGUAGE_VERSION)});
 
-    // register we want keyboard input
-    _ = c.XSelectInput(xdisplay.display, xwindow.window, c.KeyPressMask | c.KeyReleaseMask | c.KeymapStateMask);
+    try xwindow.enableEvents();
 
     // Show the window
     _ = c.XClearWindow(xdisplay.display, xwindow.window);
@@ -90,6 +89,11 @@ pub fn main() !void {
                     break;
                 }
             },
+            c.ButtonPress => {},
+            c.ButtonRelease => {},
+            c.MotionNotify => {},
+            c.EnterNotify => {},
+            c.LeaveNotify => {},
             else => {
                 std.log.info("unrecognized event: {d}", .{ev.type});
             },

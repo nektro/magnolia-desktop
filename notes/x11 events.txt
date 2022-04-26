@@ -1,0 +1,7 @@
+mask/events for mouse input
+PointerMotionMask, ButtonPressMask, ButtonReleaseMask, EnterWindowMask, LeaveWindowMask
+MotionNotify,      ButtonPress,     ButtonRelease,     EnterNotify,     LeaveNotify
+
+On ButtonPress and ButtonRelease the event object will contains an xbutton field. This field has a button variable, which maps as follows: 1 - left mouse, 2 - middle mouse, 3 - right mouse, 4 - scroll up, 5 - scroll down.
+
+On MotionNotify the event object will contain a xmotion field. This field has two variables x and y. The x and y variables contain the mouses position in window space.

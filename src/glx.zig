@@ -25,7 +25,7 @@ pub fn isAtLeast(xdisplay: x.Display, major: usize, minor: usize) bool {
 }
 
 pub const Visual = struct {
-    visual: *c.XVisualInfo,
+    info: *c.XVisualInfo,
 
     // zig fmt: off
     var attribs = [_]c.GLint{
@@ -48,12 +48,12 @@ pub const Visual = struct {
         if (vis == null) return error.TODO;
 
         return Visual{
-            .visual = vis,
+            .info = vis,
         };
     }
 
     pub fn deinit(self: Visual) void {
         // TODO: investigate possible return values
-        _ = c.XFree(self.visual);
+        _ = c.XFree(self.info);
     }
 };

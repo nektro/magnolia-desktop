@@ -26,7 +26,7 @@ pub fn main() !void {
     defer xwindow.deinit();
 
     // Create GLX OpenGL context
-    const context = c.glXCreateContext(xdisplay.display, xvisual.visual, null, 1);
+    const context = c.glXCreateContext(xdisplay.display, xvisual.info, null, 1);
     defer c.glXDestroyContext(xdisplay.display, context);
     _ = c.glXMakeCurrent(xdisplay.display, xwindow.window, context);
 

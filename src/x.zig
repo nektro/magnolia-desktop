@@ -65,11 +65,11 @@ pub const Window = struct {
         attribs.background_pixel = xdisplay.whitePixel();
         attribs.override_redirect = 1;
         // TODO: handle C error
-        attribs.colormap = c.XCreateColormap(dpy, xdisplay.rootWindow(), xvisual.visual.*.visual, c.AllocNone);
+        attribs.colormap = c.XCreateColormap(dpy, xdisplay.rootWindow(), xvisual.info.*.visual, c.AllocNone);
         attribs.event_mask = c.ExposureMask;
 
         // TODO: handle C error
-        const win = c.XCreateWindow(xdisplay.display, xdisplay.rootWindow(), 0, 0, 320, 200, 0, xvisual.visual.*.depth, c.InputOutput, xvisual.visual.*.visual, c.CWBackPixel | c.CWColormap | c.CWBorderPixel | c.CWEventMask, &attribs);
+        const win = c.XCreateWindow(xdisplay.display, xdisplay.rootWindow(), 0, 0, 320, 200, 0, xvisual.info.*.depth, c.InputOutput, xvisual.info.*.visual, c.CWBackPixel | c.CWColormap | c.CWBorderPixel | c.CWEventMask, &attribs);
 
         // allow X to intercept user hitting window 'close' button
         // TODO: handle C error

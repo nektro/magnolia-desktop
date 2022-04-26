@@ -32,9 +32,7 @@ pub fn main() !void {
 
     try xwindow.enableEvents();
 
-    // Show the window
-    _ = c.XClearWindow(xdisplay.display, xwindow.window);
-    _ = c.XMapRaised(xdisplay.display, xwindow.window);
+    try xwindow.show();
 
     // Set GL Sample stuff
     c.glClearColor(0, 0, 0, 0);

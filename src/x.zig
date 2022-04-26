@@ -107,4 +107,10 @@ pub const Window = struct {
         // TODO: handle C error
         _ = c.XSelectInput(self.display, self.window, c.ExposureMask | mask);
     }
+
+    pub fn show(self: Window) !void {
+        // TODO: handle C error
+        _ = c.XClearWindow(self.display, self.window);
+        _ = c.XMapRaised(self.display, self.window);
+    }
 };

@@ -1,0 +1,93 @@
+authenticator/totp
+bluetooth
+boat/ship tracker https://www.marinetraffic.com/
+books
+books
+calculator
+calendar
+calls/phone
+chat/mantle client
+clocks
+    alarm
+    stopwatch
+    timer
+    world clock
+code editor
+compass
+contacts
+dictionary
+email
+file manager
+flight tracker    https://flightaware.com/live/
+font explorer
+github client
+irc client
+movies
+music
+news
+notepad
+notes
+paint.exe/paint.net
+password manager
+pgp key manager
+podcasts
+reddit client
+reminders/todo list
+rss client
+spotify client
+steam client
+stocks
+torrent client
+tv shows
+voice memo
+wallet
+    card/bank
+    crypto
+weather
+wikipedia client
+
+system utilities
+    system monitor
+        process viewer
+        cpu/ram/net usage
+        disk utilitization
+    volume control
+    network info
+    wifi analyzer
+    alt for https://www.cpuid.com/softwares/cpu-z.html
+    alt for https://www.cpuid.com/softwares/hwmonitor.html
+    fwupd frontend
+    systemctl frontend
+    docker ps frontend
+    ELF viewer/analyzer
+
+games
+    2048
+    breakout
+    checkers
+    chess
+    emulator(s)
+    go
+    mahjongg
+    minesweeper
+    pinball
+    poker
+    snake
+    solitare
+    sudoku
+
+"simple" "pro" apps
+    audio editor     (we like audacity)
+    movie maker      (rip old school windows)
+    document
+    table
+    presentation
+
+linux distro stuff
+    package manager
+    screenhot        (we like flameshot)
+    session manager
+    shell/terminal
+    wm/bar           (we like i3)
+    screensaver
+    lockscreen

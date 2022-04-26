@@ -22,25 +22,13 @@ pub fn main() !void {
     defer xvisual.deinit();
 
     // Open the window
-    var windowAttribs: c.XSetWindowAttributes = undefined;
-    windowAttribs.border_pixel = xdisplay.blackPixel();
-    windowAttribs.background_pixel = xdisplay.whitePixel();
-    windowAttribs.override_redirect = 1;
-    windowAttribs.colormap = c.XCreateColormap(xdisplay.display, xdisplay.rootWindow(), xvisual.visual.*.visual, c.AllocNone);
-    windowAttribs.event_mask = c.ExposureMask;
-    defer _ = c.XFreeColormap(xdisplay.display, windowAttribs.colormap);
-
-    const window = c.XCreateWindow(xdisplay.display, xdisplay.rootWindow(), 0, 0, 320, 200, 0, xvisual.visual.*.depth, c.InputOutput, xvisual.visual.*.visual, c.CWBackPixel | c.CWColormap | c.CWBorderPixel | c.CWEventMask, &windowAttribs);
-    defer _ = c.XDestroyWindow(xdisplay.display, window);
-
-    // Redirect Close
-    var atomWmDeleteWindow = c.XInternAtom(xdisplay.display, "WM_DELETE_WINDOW", 0);
-    _ = c.XSetWMProtocols(xdisplay.display, window, &atomWmDeleteWindow, 1);
+    const xwindow = try mag.x.Window.init(xdisplay, xvisual);
+    defer xwindow.deinit();
 
     // Create GLX OpenGL context
     const context = c.glXCreateContext(xdisplay.display, xvisual.visual, null, 1);
     defer c.glXDestroyContext(xdisplay.display, context);
-    _ = c.glXMakeCurrent(xdisplay.display, window, context);
+    _ = c.glXMakeCurrent(xdisplay.display, xwindow.window, context);
 
     std.log.debug("GL Vendor: {s}", .{c.glGetString(c.GL_VENDOR)});
     std.log.debug("GL Renderer: {s}", .{c.glGetString(c.GL_RENDERER)});
@@ -48,11 +36,11 @@ pub fn main() !void {
     std.log.debug("GL Shading Language: {s}", .{c.glGetString(c.GL_SHADING_LANGUAGE_VERSION)});
 
     // register we want keyboard input
-    _ = c.XSelectInput(xdisplay.display, window, c.KeyPressMask | c.KeyReleaseMask | c.KeymapStateMask);
+    _ = c.XSelectInput(xdisplay.display, xwindow.window, c.KeyPressMask | c.KeyReleaseMask | c.KeymapStateMask);
 
     // Show the window
-    _ = c.XClearWindow(xdisplay.display, window);
-    _ = c.XMapRaised(xdisplay.display, window);
+    _ = c.XClearWindow(xdisplay.display, xwindow.window);
+    _ = c.XMapRaised(xdisplay.display, xwindow.window);
 
     // Set GL Sample stuff
     c.glClearColor(0.5, 0.6, 0.7, 1.0);
@@ -70,7 +58,7 @@ pub fn main() !void {
         switch (ev.type) {
             c.Expose => {
                 var attribs: c.XWindowAttributes = undefined;
-                _ = c.XGetWindowAttributes(xdisplay.display, window, &attribs);
+                _ = c.XGetWindowAttributes(xdisplay.display, xwindow.window, &attribs);
                 c.glViewport(0, 0, attribs.width, attribs.height);
             },
             c.KeymapNotify => {
@@ -102,7 +90,7 @@ pub fn main() !void {
                 break;
             },
             c.ClientMessage => {
-                if (ev.xclient.data.l[0] == atomWmDeleteWindow) {
+                if (ev.xclient.data.l[0] == xwindow.atom) {
                     running = false;
                     break;
                 }
@@ -125,6 +113,6 @@ pub fn main() !void {
         c.glEnd();
 
         // Present frame
-        c.glXSwapBuffers(xdisplay.display, window);
+        c.glXSwapBuffers(xdisplay.display, xwindow.window);
     }
 }

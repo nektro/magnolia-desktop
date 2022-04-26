@@ -38,7 +38,7 @@ pub fn main() !void {
     _ = c.XMapRaised(xdisplay.display, xwindow.window);
 
     // Set GL Sample stuff
-    c.glClearColor(0.5, 0.6, 0.7, 1.0);
+    c.glClearColor(0, 0, 0, 0);
 
     // Enter message loop
     var ev: c.XEvent = undefined;

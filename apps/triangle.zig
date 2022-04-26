@@ -25,11 +25,6 @@ pub fn main() !void {
     const xwindow = try mag.x.Window.init(xdisplay, xvisual);
     defer xwindow.deinit();
 
-    // Create GLX OpenGL context
-    const context = c.glXCreateContext(xdisplay.display, xvisual.info, null, 1);
-    defer c.glXDestroyContext(xdisplay.display, context);
-    _ = c.glXMakeCurrent(xdisplay.display, xwindow.window, context);
-
     std.log.debug("GL Vendor: {s}", .{c.glGetString(c.GL_VENDOR)});
     std.log.debug("GL Renderer: {s}", .{c.glGetString(c.GL_RENDERER)});
     std.log.debug("GL Version: {s}", .{c.glGetString(c.GL_VERSION)});

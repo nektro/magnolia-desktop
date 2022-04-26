@@ -76,6 +76,13 @@ pub const Window = struct {
         var atom = c.XInternAtom(dpy, "WM_DELETE_WINDOW", 0);
         _ = c.XSetWMProtocols(dpy, win, &atom, 1);
 
+        // Create GLX OpenGL context
+        // TODO: maybe move this to glx namespace
+        // TODO: handle C errors
+        const context = c.glXCreateContext(dpy, xvisual.info, null, 1);
+        defer c.glXDestroyContext(dpy, context);
+        _ = c.glXMakeCurrent(dpy, win, context);
+
         return Window{
             .display = dpy,
             .attribs = attribs,

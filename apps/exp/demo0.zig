@@ -1,12 +1,7 @@
 const std = @import("std");
+const mag = @import("magnolia");
 
-const c = @cImport({
-    @cInclude("X11/Xlib.h");
-    @cInclude("X11/Xutil.h");
-    @cInclude("X11/keysymdef.h");
-    @cInclude("GL/gl.h");
-    @cInclude("GL/glx.h");
-});
+const c = mag.c;
 
 pub fn main() !void {
 

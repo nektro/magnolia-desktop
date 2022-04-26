@@ -39,6 +39,8 @@ pub fn main() !void {
     // Set GL Sample stuff
     c.glClearColor(0, 0, 0, 0);
 
+    draw(xdisplay, xwindow);
+
     // Enter message loop
     var ev: c.XEvent = undefined;
     var running = true;
@@ -54,6 +56,7 @@ pub fn main() !void {
                 var attribs: c.XWindowAttributes = undefined;
                 _ = c.XGetWindowAttributes(xdisplay.display, xwindow.window, &attribs);
                 c.glViewport(0, 0, attribs.width, attribs.height);
+                draw(xdisplay, xwindow);
             },
             c.KeymapNotify => {
                 _ = c.XRefreshKeyboardMapping(&ev.xmapping);
@@ -98,20 +101,24 @@ pub fn main() !void {
                 std.log.info("unrecognized event: {d}", .{ev.type});
             },
         }
+    }
+}
 
-        // OpenGL Rendering
-        c.glClear(c.GL_COLOR_BUFFER_BIT);
+fn draw(xdisplay: mag.x.Display, xwindow: mag.x.Window) void {
+    // OpenGL Rendering
+    c.glClear(c.GL_COLOR_BUFFER_BIT);
 
-        c.glBegin(c.GL_TRIANGLES);
+    c.glBegin(c.GL_TRIANGLES);
+    {
         c.glColor3f(1.0, 0.0, 0.0);
         c.glVertex3f(0.0, -1.0, 0.0);
         c.glColor3f(0.0, 1.0, 0.0);
         c.glVertex3f(-1.0, 1.0, 0.0);
         c.glColor3f(0.0, 0.0, 1.0);
         c.glVertex3f(1.0, 1.0, 0.0);
-        c.glEnd();
-
-        // Present frame
-        c.glXSwapBuffers(xdisplay.display, xwindow.window);
     }
+    c.glEnd();
+
+    // Present frame
+    c.glXSwapBuffers(xdisplay.display, xwindow.window);
 }

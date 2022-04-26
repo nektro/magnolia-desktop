@@ -1,0 +1,6 @@
+id: l862p8h05u3xp3w5ydtuhks9wtd961ktm8ivzhdkso0ylf1i
+name: magnolia
+main: src/main.zig
+dependencies:
+  - src: system_lib X11
+  - src: system_lib GL

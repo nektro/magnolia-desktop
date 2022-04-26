@@ -6,16 +6,13 @@ const c = mag.c;
 pub fn main() !void {
 
     // Open the display
-    const display = c.XOpenDisplay(null).?;
-    defer _ = c.XCloseDisplay(display);
-
-    // const screen = DefaultScreenOfDisplay(display);
-    const screenId = DefaultScreen(display);
+    const xdisplay = try mag.x.Display.init();
+    defer xdisplay.deinit();
 
     // Check GLX version
     var majorGLX: c_int = 0;
     var minorGLX: c_int = 0;
-    _ = c.glXQueryVersion(display, &majorGLX, &minorGLX);
+    _ = c.glXQueryVersion(xdisplay.display, &majorGLX, &minorGLX);
     if (!(majorGLX >= 1 and minorGLX >= 2)) {
         std.log.err("GLX 1.2 or greater is required.", .{});
         return;
@@ -37,30 +34,30 @@ pub fn main() !void {
         c.None
     };
     // zig fmt: on
-    const visual = c.glXChooseVisual(display, screenId, &glxAttribs);
+    const visual = c.glXChooseVisual(xdisplay.display, xdisplay.screenId, &glxAttribs);
     defer _ = c.XFree(visual);
     if (visual == null) return;
 
     // Open the window
     var windowAttribs: c.XSetWindowAttributes = undefined;
-    windowAttribs.border_pixel = BlackPixel(display, screenId);
-    windowAttribs.background_pixel = WhitePixel(display, screenId);
+    windowAttribs.border_pixel = xdisplay.blackPixel();
+    windowAttribs.background_pixel = xdisplay.whitePixel();
     windowAttribs.override_redirect = 1;
-    windowAttribs.colormap = c.XCreateColormap(display, RootWindow(display, screenId), visual.*.visual, c.AllocNone);
+    windowAttribs.colormap = c.XCreateColormap(xdisplay.display, xdisplay.rootWindow(), visual.*.visual, c.AllocNone);
     windowAttribs.event_mask = c.ExposureMask;
-    defer _ = c.XFreeColormap(display, windowAttribs.colormap);
+    defer _ = c.XFreeColormap(xdisplay.display, windowAttribs.colormap);
 
-    const window = c.XCreateWindow(display, RootWindow(display, screenId), 0, 0, 320, 200, 0, visual.*.depth, c.InputOutput, visual.*.visual, c.CWBackPixel | c.CWColormap | c.CWBorderPixel | c.CWEventMask, &windowAttribs);
-    defer _ = c.XDestroyWindow(display, window);
+    const window = c.XCreateWindow(xdisplay.display, xdisplay.rootWindow(), 0, 0, 320, 200, 0, visual.*.depth, c.InputOutput, visual.*.visual, c.CWBackPixel | c.CWColormap | c.CWBorderPixel | c.CWEventMask, &windowAttribs);
+    defer _ = c.XDestroyWindow(xdisplay.display, window);
 
     // Redirect Close
-    var atomWmDeleteWindow = c.XInternAtom(display, "WM_DELETE_WINDOW", 0);
-    _ = c.XSetWMProtocols(display, window, &atomWmDeleteWindow, 1);
+    var atomWmDeleteWindow = c.XInternAtom(xdisplay.display, "WM_DELETE_WINDOW", 0);
+    _ = c.XSetWMProtocols(xdisplay.display, window, &atomWmDeleteWindow, 1);
 
     // Create GLX OpenGL context
-    const context = c.glXCreateContext(display, visual, null, 1);
-    defer c.glXDestroyContext(display, context);
-    _ = c.glXMakeCurrent(display, window, context);
+    const context = c.glXCreateContext(xdisplay.display, visual, null, 1);
+    defer c.glXDestroyContext(xdisplay.display, context);
+    _ = c.glXMakeCurrent(xdisplay.display, window, context);
 
     std.log.debug("GL Vendor: {s}", .{c.glGetString(c.GL_VENDOR)});
     std.log.debug("GL Renderer: {s}", .{c.glGetString(c.GL_RENDERER)});
@@ -68,11 +65,11 @@ pub fn main() !void {
     std.log.debug("GL Shading Language: {s}", .{c.glGetString(c.GL_SHADING_LANGUAGE_VERSION)});
 
     // register we want keyboard input
-    _ = c.XSelectInput(display, window, c.KeyPressMask | c.KeyReleaseMask | c.KeymapStateMask);
+    _ = c.XSelectInput(xdisplay.display, window, c.KeyPressMask | c.KeyReleaseMask | c.KeymapStateMask);
 
     // Show the window
-    _ = c.XClearWindow(display, window);
-    _ = c.XMapRaised(display, window);
+    _ = c.XClearWindow(xdisplay.display, window);
+    _ = c.XMapRaised(xdisplay.display, window);
 
     // Set GL Sample stuff
     c.glClearColor(0.5, 0.6, 0.7, 1.0);
@@ -85,12 +82,12 @@ pub fn main() !void {
     var keysym: c.KeySym = 0;
 
     while (running) {
-        _ = c.XNextEvent(display, &ev);
+        _ = c.XNextEvent(xdisplay.display, &ev);
 
         switch (ev.type) {
             c.Expose => {
                 var attribs: c.XWindowAttributes = undefined;
-                _ = c.XGetWindowAttributes(display, window, &attribs);
+                _ = c.XGetWindowAttributes(xdisplay.display, window, &attribs);
                 c.glViewport(0, 0, attribs.width, attribs.height);
             },
             c.KeymapNotify => {
@@ -145,33 +142,6 @@ pub fn main() !void {
         c.glEnd();
 
         // Present frame
-        c.glXSwapBuffers(display, window);
+        c.glXSwapBuffers(xdisplay.display, window);
     }
-}
-
-// #define DefaultScreenOfDisplay(dpy) ScreenOfDisplay(dpy,DefaultScreen(dpy
-// #define ScreenOfDisplay(dpy, scr)(&((_XPrivDisplay)(dpy))->screens[scr])
-// #define DefaultScreen(dpy)     (((_XPrivDisplay)(dpy))->default_screen)
-fn DefaultScreenOfDisplay(dpy: *c.Display) *c.Screen {
-    return ScreenOfDisplay(dpy, DefaultScreen(dpy));
-}
-fn ScreenOfDisplay(dpy: *c.Display, scr: c_int) *c.Screen {
-    return std.zig.c_translation.cast(c._XPrivDisplay, dpy).*.screens + @intCast(usize, scr);
-}
-fn DefaultScreen(dpy: *c.Display) c_int {
-    return std.zig.c_translation.cast(c._XPrivDisplay, dpy).*.default_screen;
-}
-
-// #define BlackPixel(dpy, scr)     (ScreenOfDisplay(dpy,scr)->black_pixel)
-// #define WhitePixel(dpy, scr)     (ScreenOfDisplay(dpy,scr)->white_pixel)
-fn BlackPixel(dpy: *c.Display, scr: c_int) c_ulong {
-    return ScreenOfDisplay(dpy, scr).*.black_pixel;
-}
-fn WhitePixel(dpy: *c.Display, scr: c_int) c_ulong {
-    return ScreenOfDisplay(dpy, scr).*.white_pixel;
-}
-
-// #define RootWindow(dpy, scr) 	(ScreenOfDisplay(dpy,scr)->root)
-fn RootWindow(dpy: *c.Display, scr: c_int) c.Window {
-    return ScreenOfDisplay(dpy, scr).*.root;
 }

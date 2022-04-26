@@ -10,14 +10,12 @@ pub fn main() !void {
     defer xdisplay.deinit();
 
     // Check GLX version
-    var majorGLX: c_int = 0;
-    var minorGLX: c_int = 0;
-    _ = c.glXQueryVersion(xdisplay.display, &majorGLX, &minorGLX);
-    if (!(majorGLX >= 1 and minorGLX >= 2)) {
+    if (!mag.glx.isAtLeast(xdisplay, 1, 2)) {
         std.log.err("GLX 1.2 or greater is required.", .{});
         return;
     }
-    std.log.debug("GLX version: {d}.{d}", .{ majorGLX, minorGLX });
+    const glxv = mag.glx.version(xdisplay).?;
+    std.log.debug("GLX version: {d}.{d}", .{ glxv.major, glxv.minor });
 
     // GLX, create XVisualInfo, this is the minimum visuals we want
     // zig fmt: off

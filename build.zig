@@ -7,7 +7,7 @@ pub fn build(b: *std.build.Builder) void {
 
     const mode = b.standardReleaseOptions();
 
-    addExe(b, target, mode, "exp-demo0", "apps/exp/demo0.zig");
+    addExe(b, target, mode, "triangle", "apps/triangle.zig");
 }
 
 fn addExe(b: *std.build.Builder, target: std.zig.CrossTarget, mode: std.builtin.Mode, comptime name: string, root_src: string) void {

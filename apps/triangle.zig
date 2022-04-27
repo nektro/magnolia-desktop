@@ -5,105 +5,46 @@ const c = mag.c;
 const gl = mag.gl;
 
 pub fn main() !void {
+    var client = try Client.init();
+    defer client.deinit();
 
-    // Open the display
-    const xdisplay = try mag.x.Display.init();
-    defer xdisplay.deinit();
+    var app = try mag.App(Client).init(client);
+    defer app.deinit();
 
-    // Check GLX version
-    if (!mag.glx.isAtLeast(xdisplay, 1, 2)) {
-        std.log.err("GLX 1.2 or greater is required.", .{});
-        return;
-    }
-    const glxv = mag.glx.version(xdisplay).?;
-    std.log.debug("GLX version: {d}.{d}", .{ glxv.major, glxv.minor });
-
-    // GLX, create XVisualInfo, this is the minimum visuals we want
-    const xvisual = try mag.glx.Visual.init(xdisplay);
-    defer xvisual.deinit();
-
-    // Open the window
-    const xwindow = try mag.x.Window.init(xdisplay, xvisual);
-    defer xwindow.deinit();
-
-    std.log.debug("GL Vendor: {s}", .{mag.gl.String.vendor.get()});
-    std.log.debug("GL Renderer: {s}", .{mag.gl.String.renderer.get()});
-    std.log.debug("GL Version: {s}", .{mag.gl.String.version.get()});
-    std.log.debug("GL Extensions: {d}", .{mag.gl.String.extensionCount()});
-
-    try xwindow.enableEvents();
-
-    try xwindow.show();
+    try app.start();
 
     // Set GL Sample stuff
     c.glClearColor(0, 0, 0, 1);
 
-    draw(xdisplay, xwindow);
+    draw(app.window);
 
-    // Enter message loop
-    var ev: c.XEvent = undefined;
-    var running = true;
-    var str: [25]u8 = undefined;
-    var len: usize = 0;
-    var keysym: c.KeySym = 0;
-
-    while (running) {
-        _ = c.XNextEvent(xdisplay.display, &ev);
-
-        switch (ev.type) {
-            c.Expose => {
-                var attribs: c.XWindowAttributes = undefined;
-                _ = c.XGetWindowAttributes(xdisplay.display, xwindow.window, &attribs);
-                c.glViewport(0, 0, attribs.width, attribs.height);
-                draw(xdisplay, xwindow);
-            },
-            c.KeymapNotify => {
-                _ = c.XRefreshKeyboardMapping(&ev.xmapping);
-            },
-            c.KeyPress => {
-                len = @intCast(usize, c.XLookupString(&ev.xkey, &str, 25, &keysym, null));
-                if (keysym == c.XK_Escape) {
-                    running = false;
-                    break;
-                }
-                if (len > 0) {
-                    // std.log.debug("key pressed: {s} - {d} - {d}", .{ str[0..len], len, keysym });
-                    std.log.debug("key down: {d}", .{keysym});
-                }
-            },
-            c.KeyRelease => {
-                len = @intCast(usize, c.XLookupString(&ev.xkey, &str, 25, &keysym, null));
-                if (keysym == c.XK_Escape) {
-                    break;
-                }
-                if (len > 0) {
-                    // std.log.debug("key released: {s} - {d} - {d}", .{ str[0..len], len, keysym });
-                    std.log.debug("key up: {d}", .{keysym});
-                }
-            },
-            c.DestroyNotify => {
-                running = false;
-                break;
-            },
-            c.ClientMessage => {
-                if (ev.xclient.data.l[0] == xwindow.atom) {
-                    running = false;
-                    break;
-                }
-            },
-            c.ButtonPress => {},
-            c.ButtonRelease => {},
-            c.MotionNotify => {},
-            c.EnterNotify => {},
-            c.LeaveNotify => {},
-            else => {
-                std.log.info("unrecognized event: {d}", .{ev.type});
-            },
-        }
-    }
+    try app.run();
 }
 
-fn draw(xdisplay: mag.x.Display, xwindow: mag.x.Window) void {
+pub const Client = struct {
+    //
+
+    const Self = @This();
+
+    pub fn init() !Self {
+        return Self{
+            //
+        };
+    }
+
+    pub fn deinit(self: Self) void {
+        _ = self;
+    }
+
+    pub fn handleResize(self: Self, xwindow: mag.x.Window, width: u32, height: u32) !void {
+        _ = self;
+        _ = width;
+        _ = height;
+        draw(xwindow);
+    }
+};
+
+fn draw(xwindow: mag.x.Window) void {
     // OpenGL Rendering
     c.glClear(c.GL_COLOR_BUFFER_BIT);
 
@@ -121,5 +62,5 @@ fn draw(xdisplay: mag.x.Display, xwindow: mag.x.Window) void {
     c.glEnd();
 
     // Present frame
-    c.glXSwapBuffers(xdisplay.display, xwindow.window);
+    c.glXSwapBuffers(xwindow.display, xwindow.window);
 }

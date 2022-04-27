@@ -1,7 +1,6 @@
 const std = @import("std");
 const mag = @import("magnolia");
 
-const c = mag.c;
 const gl = mag.gl;
 
 pub fn main() !void {
@@ -52,5 +51,5 @@ fn draw(xwindow: mag.x.Window) void {
     });
 
     // Present frame
-    c.glXSwapBuffers(xwindow.display, xwindow.window);
+    gl.commitFrame(xwindow);
 }

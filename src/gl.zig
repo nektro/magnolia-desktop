@@ -95,3 +95,7 @@ pub fn vertexp(px: f32, py: f32) Path.Item {
         .{ .x = px, .y = py },
     } };
 }
+
+pub fn commitFrame(xwindow: x.Window) void {
+    c.glXSwapBuffers(xwindow.display, xwindow.window);
+}

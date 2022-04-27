@@ -30,15 +30,15 @@ pub const Color = struct {
     a: f32 = 1,
 };
 
-pub fn color4(r: f32, g: f32, b: f32, a: f32) void {
+fn color4(r: f32, g: f32, b: f32, a: f32) void {
     c.glColor4f(r, g, b, a);
 }
 
-pub fn color3(r: f32, g: f32, b: f32) void {
+fn color3(r: f32, g: f32, b: f32) void {
     return color4(r, g, b, 1);
 }
 
-pub fn vertex2(px: f32, py: f32) void {
+fn vertex2(px: f32, py: f32) void {
     c.glVertex3f(px, py, 0);
 }
 
@@ -50,4 +50,48 @@ pub fn clear(
     },
 ) void {
     c.glClear(@enumToInt(buffer));
+}
+
+pub const Point = struct {
+    x: f32,
+    y: f32,
+};
+
+pub const Path = struct {
+    items: []const Item,
+
+    pub const Item = union(enum) {
+        vertexc: std.meta.Tuple(&.{ Point, Color }),
+        vertexp: std.meta.Tuple(&.{Point}),
+    };
+};
+
+pub fn draw(mode: consts.Primitive, items: []const Path.Item) void {
+    c.glBegin(@enumToInt(mode));
+
+    for (items) |it| {
+        switch (it) {
+            .vertexc => |v| {
+                color3(v[1].r, v[1].g, v[1].b);
+                vertex2(v[0].x, v[0].y);
+            },
+            .vertexp => |v| {
+                vertex2(v[0].x, v[0].y);
+            },
+        }
+    }
+    c.glEnd();
+}
+
+pub fn vertexc(px: f32, py: f32, r: f32, g: f32, b: f32) Path.Item {
+    return Path.Item{ .vertexc = .{
+        .{ .x = px, .y = py },
+        .{ .r = r, .g = g, .b = b },
+    } };
+}
+
+pub fn vertexp(px: f32, py: f32) Path.Item {
+    return Path.Item{ .vertexp = .{
+        .{ .x = px, .y = py },
+    } };
 }

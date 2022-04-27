@@ -45,18 +45,11 @@ fn draw(xwindow: mag.x.Window) void {
     // OpenGL Rendering
     gl.clear(.color);
 
-    c.glBegin(c.GL_TRIANGLES);
-
-    gl.color3(1, 0, 0);
-    gl.vertex2(-1, -1);
-
-    gl.color3(0, 1, 0);
-    gl.vertex2(0, 1);
-
-    gl.color3(0, 0, 1);
-    gl.vertex2(1, -1);
-
-    c.glEnd();
+    gl.draw(.TRIANGLES, &.{
+        gl.vertexc(-1, -1, 1, 0, 0),
+        gl.vertexc(0, 1, 0, 1, 0),
+        gl.vertexc(1, -1, 0, 0, 1),
+    });
 
     // Present frame
     c.glXSwapBuffers(xwindow.display, xwindow.window);

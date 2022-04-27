@@ -4,3 +4,4 @@ main: src/main.zig
 dependencies:
   - src: system_lib X11
   - src: system_lib GL
+  - src: git https://github.com/nektro/zig-extras

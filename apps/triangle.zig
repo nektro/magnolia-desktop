@@ -13,9 +13,6 @@ pub fn main() !void {
 
     try app.start();
 
-    // Set GL Sample stuff
-    c.glClearColor(0, 0, 0, 1);
-
     draw(app.window);
 
     try app.run();

@@ -55,6 +55,8 @@ pub fn App(comptime Client: type) type {
             try self.window.enableEvents();
 
             try self.window.show();
+
+            c.glClearColor(0, 0, 0, 1);
         }
 
         pub fn run(self: Self) !void {

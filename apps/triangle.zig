@@ -2,6 +2,7 @@ const std = @import("std");
 const mag = @import("magnolia");
 
 const c = mag.c;
+const gl = mag.gl;
 
 pub fn main() !void {
 
@@ -107,16 +108,16 @@ fn draw(xdisplay: mag.x.Display, xwindow: mag.x.Window) void {
     c.glClear(c.GL_COLOR_BUFFER_BIT);
 
     c.glBegin(c.GL_TRIANGLES);
-    {
-        c.glColor3f(1.0, 0.0, 0.0);
-        c.glVertex3f(-1.0, -1.0, 0.0);
 
-        c.glColor3f(0.0, 1.0, 0.0);
-        c.glVertex3f(0, 1.0, 0.0);
+    gl.color3(1, 0, 0);
+    gl.vertex2(-1, -1);
 
-        c.glColor3f(0.0, 0.0, 1.0);
-        c.glVertex3f(1.0, -1.0, 0.0);
-    }
+    gl.color3(0, 1, 0);
+    gl.vertex2(0, 1);
+
+    gl.color3(0, 0, 1);
+    gl.vertex2(1, -1);
+
     c.glEnd();
 
     // Present frame

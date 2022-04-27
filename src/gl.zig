@@ -22,3 +22,22 @@ pub const String = enum(c_uint) {
         return extras.countScalar(u8, String.extensions.get(), ' ');
     }
 };
+
+pub const Color = struct {
+    r: f32,
+    g: f32,
+    b: f32,
+    a: f32 = 1,
+};
+
+pub fn color4(r: f32, g: f32, b: f32, a: f32) void {
+    c.glColor4f(r, g, b, a);
+}
+
+pub fn color3(r: f32, g: f32, b: f32) void {
+    return color4(r, g, b, 1);
+}
+
+pub fn vertex2(px: f32, py: f32) void {
+    c.glVertex3f(px, py, 0);
+}

@@ -109,11 +109,13 @@ fn draw(xdisplay: mag.x.Display, xwindow: mag.x.Window) void {
     c.glBegin(c.GL_TRIANGLES);
     {
         c.glColor3f(1.0, 0.0, 0.0);
-        c.glVertex3f(0.0, -1.0, 0.0);
+        c.glVertex3f(-1.0, -1.0, 0.0);
+
         c.glColor3f(0.0, 1.0, 0.0);
-        c.glVertex3f(-1.0, 1.0, 0.0);
+        c.glVertex3f(0, 1.0, 0.0);
+
         c.glColor3f(0.0, 0.0, 1.0);
-        c.glVertex3f(1.0, 1.0, 0.0);
+        c.glVertex3f(1.0, -1.0, 0.0);
     }
     c.glEnd();
 

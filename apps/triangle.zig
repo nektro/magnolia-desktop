@@ -35,7 +35,7 @@ pub fn main() !void {
     try xwindow.show();
 
     // Set GL Sample stuff
-    c.glClearColor(0, 0, 0, 0);
+    c.glClearColor(0, 0, 0, 1);
 
     draw(xdisplay, xwindow);
 

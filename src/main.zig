@@ -11,6 +11,8 @@ pub fn App(comptime Client: type) type {
         visual: glx.Visual,
         window: x.Window,
         client: Client,
+        win_width: u32,
+        win_height: u32,
 
         const Self = @This();
 
@@ -37,6 +39,8 @@ pub fn App(comptime Client: type) type {
                 .visual = visual,
                 .window = window,
                 .client = client,
+                .win_width = 0,
+                .win_height = 0,
             };
         }
 
@@ -59,7 +63,7 @@ pub fn App(comptime Client: type) type {
             c.glClearColor(0, 0, 0, 1);
         }
 
-        pub fn run(self: Self) !void {
+        pub fn run(self: *Self) !void {
             var ev: c.XEvent = undefined;
             var running = true;
             var str: [25]u8 = undefined;
@@ -77,6 +81,11 @@ pub fn App(comptime Client: type) type {
 
                         const w = @intCast(u32, attribs.width);
                         const h = @intCast(u32, attribs.height);
+
+                        if (w == self.win_width and h == self.win_height) return;
+                        self.win_width = w;
+                        self.win_height = h;
+
                         try self.client.handleResize(self.window, w, h);
                     },
                     c.KeymapNotify => {

@@ -41,3 +41,13 @@ pub fn color3(r: f32, g: f32, b: f32) void {
 pub fn vertex2(px: f32, py: f32) void {
     c.glVertex3f(px, py, 0);
 }
+
+pub fn clear(
+    buffer: enum(c_uint) {
+        color = @enumToInt(consts.PushPopAttribBit.COLOR_BUFFER_BIT),
+        depth = @enumToInt(consts.PushPopAttribBit.DEPTH_BUFFER_BIT),
+        stencil = @enumToInt(consts.PushPopAttribBit.STENCIL_BUFFER_BIT),
+    },
+) void {
+    c.glClear(@enumToInt(buffer));
+}

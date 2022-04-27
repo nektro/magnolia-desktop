@@ -46,7 +46,7 @@ pub const Client = struct {
 
 fn draw(xwindow: mag.x.Window) void {
     // OpenGL Rendering
-    c.glClear(c.GL_COLOR_BUFFER_BIT);
+    gl.clear(.color);
 
     c.glBegin(c.GL_TRIANGLES);
 

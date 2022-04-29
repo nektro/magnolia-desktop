@@ -14,6 +14,7 @@ pub fn App(comptime Client: type) type {
         win_width: u32,
         win_height: u32,
         center: Point,
+        active: bool,
 
         const Self = @This();
 
@@ -43,6 +44,7 @@ pub fn App(comptime Client: type) type {
                 .win_width = 0,
                 .win_height = 0,
                 .center = .{ .x = 0, .y = 0 },
+                .active = false,
             };
         }
 
@@ -96,6 +98,7 @@ pub fn App(comptime Client: type) type {
                         _ = c.XRefreshKeyboardMapping(&ev.xmapping);
                     },
                     c.KeyPress => {
+                        if (!self.active) continue;
                         len = @intCast(usize, c.XLookupString(&ev.xkey, &str, 25, &keysym, null));
                         if (len > 0) {
                             // std.log.debug("key pressed: {s} - {d} - {d}", .{ str[0..len], len, keysym });
@@ -103,6 +106,7 @@ pub fn App(comptime Client: type) type {
                         }
                     },
                     c.KeyRelease => {
+                        if (!self.active) continue;
                         len = @intCast(usize, c.XLookupString(&ev.xkey, &str, 25, &keysym, null));
                         if (len > 0) {
                             // std.log.debug("key released: {s} - {d} - {d}", .{ str[0..len], len, keysym });
@@ -110,9 +114,11 @@ pub fn App(comptime Client: type) type {
                         }
                     },
                     c.DestroyNotify => {
+                        if (!self.active) continue;
                         running = false;
                     },
                     c.ClientMessage => {
+                        if (!self.active) continue;
                         if (ev.xclient.data.l[0] == self.window.atom) {
                             running = false;
                         }
@@ -121,9 +127,11 @@ pub fn App(comptime Client: type) type {
                     c.ButtonRelease => {},
                     c.MotionNotify => {},
                     c.EnterNotify => {
+                        self.active = true;
                         if (@hasDecl(Client, "handleEnter")) try self.client.handleEnter(self.*);
                     },
                     c.LeaveNotify => {
+                        self.active = false;
                         if (@hasDecl(Client, "handleLeave")) try self.client.handleLeave(self.*);
                     },
                     else => {

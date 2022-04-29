@@ -18,7 +18,7 @@ pub fn main() !void {
     try app.run();
 }
 
-pub const Client = struct {
+const Client = struct {
     const Self = @This();
 
     pub fn init() !Self {

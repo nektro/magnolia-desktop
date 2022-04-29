@@ -8,6 +8,7 @@ pub fn build(b: *std.build.Builder) void {
     const mode = b.standardReleaseOptions();
 
     addExe(b, target, mode, "triangle", "apps/triangle.zig");
+    addExe(b, target, mode, "demo-centersquare", "apps/demo-centersquare.zig");
 }
 
 fn addExe(b: *std.build.Builder, target: std.zig.CrossTarget, mode: std.builtin.Mode, comptime name: string, root_src: string) void {

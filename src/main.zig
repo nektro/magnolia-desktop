@@ -136,10 +136,17 @@ pub const Point = struct {
     y: u32 = 0,
 };
 
+pub const Color = struct {
+    r: f32, // red value (bounded between 0 and 1)
+    g: f32, // green value (bounded between 0 and 1)
+    b: f32, // blue value (bounded between 0 and 1)
+};
+
 pub const Rect = struct {
     top_left: Point,
     width: u32,
     height: u32,
+    color: Color,
 
     pub fn draw(self: Rect, win_width: u32, win_height: u32) void {
         const wwf = @intToFloat(f32, win_width);
@@ -160,10 +167,10 @@ pub const Rect = struct {
         pts -= @splat(8, @as(f32, 1));
 
         gl.draw(&.{
-            gl.vertexc(pts[0], -pts[1], 1, 0, 0),
-            gl.vertexc(pts[2], -pts[3], 0, 1, 0),
-            gl.vertexc(pts[4], -pts[5], 0, 0, 1),
-            gl.vertexc(pts[6], -pts[7], 1, 1, 1),
+            gl.vertexc(pts[0], -pts[1], self.color.r, self.color.g, self.color.b),
+            gl.vertexp(pts[2], -pts[3]),
+            gl.vertexp(pts[4], -pts[5]),
+            gl.vertexp(pts[6], -pts[7]),
         });
     }
 };

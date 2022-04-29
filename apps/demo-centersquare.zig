@@ -15,6 +15,7 @@ const Client = struct {
                 .top_left = .{},
                 .width = 150,
                 .height = 150,
+                .color = .{ .r = 1, .g = 0, .b = 0 },
             },
         };
     }

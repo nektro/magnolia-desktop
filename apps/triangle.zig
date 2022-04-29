@@ -2,6 +2,8 @@ const std = @import("std");
 const mag = @import("magnolia");
 const gl = mag.gl;
 
+const App = mag.App(Client);
+
 pub fn main() !void {
     var client = try Client.init();
     defer client.deinit();
@@ -11,7 +13,7 @@ pub fn main() !void {
 
     try app.start();
 
-    draw(app.window);
+    draw(app);
 
     try app.run();
 }
@@ -27,15 +29,15 @@ pub const Client = struct {
         _ = self;
     }
 
-    pub fn handleResize(self: Self, xwindow: mag.x.Window, width: u32, height: u32) !void {
+    pub fn handleResize(self: Self, app: App, width: u32, height: u32) !void {
         _ = self;
         _ = width;
         _ = height;
-        draw(xwindow);
+        draw(app);
     }
 };
 
-fn draw(xwindow: mag.x.Window) void {
+fn draw(app: App) void {
     gl.clear(.color);
 
     gl.draw(.TRIANGLES, &.{
@@ -44,5 +46,5 @@ fn draw(xwindow: mag.x.Window) void {
         gl.vertexc(1, -1, 0, 0, 1),
     });
 
-    gl.commitFrame(xwindow);
+    gl.commitFrame(app.window);
 }

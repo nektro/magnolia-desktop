@@ -75,6 +75,7 @@ games
     snake
     solitare
     sudoku
+    tetris
 
 "simple" "pro" apps
     audio editor     (we like audacity)

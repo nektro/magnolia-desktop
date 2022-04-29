@@ -51,19 +51,13 @@ const Client = struct {
     }
 
     pub fn handleEnter(self: *Self, app: App) !void {
-        // #2ECC71
-        self.rect.color.r = 0.18;
-        self.rect.color.g = 0.80;
-        self.rect.color.b = 0.443;
+        self.rect.color = mag.Color.parseConst("#2ECC71");
 
         self.draw(app);
     }
 
     pub fn handleLeave(self: *Self, app: App) !void {
-        // #E74C3C
-        self.rect.color.r = 0.906;
-        self.rect.color.g = 0.298;
-        self.rect.color.b = 0.235;
+        self.rect.color = mag.Color.parseConst("#E74C3C");
 
         self.draw(app);
     }

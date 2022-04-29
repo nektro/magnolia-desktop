@@ -1,6 +1,5 @@
 const std = @import("std");
 const mag = @import("magnolia");
-
 const gl = mag.gl;
 
 pub fn main() !void {
@@ -18,14 +17,10 @@ pub fn main() !void {
 }
 
 pub const Client = struct {
-    //
-
     const Self = @This();
 
     pub fn init() !Self {
-        return Self{
-            //
-        };
+        return Self{};
     }
 
     pub fn deinit(self: Self) void {
@@ -41,7 +36,6 @@ pub const Client = struct {
 };
 
 fn draw(xwindow: mag.x.Window) void {
-    // OpenGL Rendering
     gl.clear(.color);
 
     gl.draw(.TRIANGLES, &.{
@@ -50,6 +44,5 @@ fn draw(xwindow: mag.x.Window) void {
         gl.vertexc(1, -1, 0, 0, 1),
     });
 
-    // Present frame
     gl.commitFrame(xwindow);
 }

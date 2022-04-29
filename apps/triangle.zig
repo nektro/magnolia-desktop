@@ -38,7 +38,7 @@ const Client = struct {
 fn draw(app: App) void {
     gl.clear(.color);
 
-    gl.draw(.TRIANGLES, &.{
+    gl.draw(&.{
         gl.vertexc(-1, -1, 1, 0, 0),
         gl.vertexc(0, 1, 0, 1, 0),
         gl.vertexc(1, -1, 0, 0, 1),

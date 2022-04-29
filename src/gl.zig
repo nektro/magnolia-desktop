@@ -66,7 +66,7 @@ pub const Path = struct {
     };
 };
 
-pub fn draw(mode: consts.Primitive, items: []const Path.Item) void {
+fn drawRaw(mode: consts.Primitive, items: []const Path.Item) void {
     c.glBegin(@enumToInt(mode));
 
     for (items) |it| {
@@ -81,6 +81,10 @@ pub fn draw(mode: consts.Primitive, items: []const Path.Item) void {
         }
     }
     c.glEnd();
+}
+
+pub fn draw(items: []const Path.Item) void {
+    return drawRaw(.POLYGON, items);
 }
 
 pub fn vertexc(px: f32, py: f32, r: f32, g: f32, b: f32) Path.Item {

@@ -1,0 +1,14 @@
+[nix-shell:~/dev/magnolia-desktop]$ ldd ./zig-out/bin/magnolia-triangle 
+    linux-vdso.so.1
+    /nix/store/jsp3h3wpzc842j0rz61m5ly71ak6qgdn-glibc-2.32-54/lib/ld-linux-x86-64.so.2
+    libGL.so.1
+    libGLX.so.0
+    libGLdispatch.so.0
+    libX11.so.6
+    libXau.so.6
+    libXdmcp.so.6
+    libXext.so.6
+    libc.so.6
+    libdl.so.2
+    libpthread.so.0
+    libxcb.so.1

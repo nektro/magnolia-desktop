@@ -9,6 +9,7 @@ pub fn build(b: *std.build.Builder) void {
 
     addExe(b, target, mode, "triangle", "apps/triangle.zig");
     addExe(b, target, mode, "demo-centersquare", "apps/demo-centersquare.zig");
+    addExe(b, target, mode, "demo-focusblur", "apps/demo-focusblur.zig");
 }
 
 fn addExe(b: *std.build.Builder, target: std.zig.CrossTarget, mode: std.builtin.Mode, comptime name: string, root_src: string) void {

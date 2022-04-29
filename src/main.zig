@@ -120,8 +120,12 @@ pub fn App(comptime Client: type) type {
                     c.ButtonPress => {},
                     c.ButtonRelease => {},
                     c.MotionNotify => {},
-                    c.EnterNotify => {},
-                    c.LeaveNotify => {},
+                    c.EnterNotify => {
+                        if (@hasDecl(Client, "handleEnter")) try self.client.handleEnter(self.*);
+                    },
+                    c.LeaveNotify => {
+                        if (@hasDecl(Client, "handleLeave")) try self.client.handleLeave(self.*);
+                    },
                     else => {
                         std.log.info("unrecognized event: {d}", .{ev.type});
                     },

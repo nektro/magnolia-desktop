@@ -13,6 +13,7 @@ pub fn App(comptime Client: type) type {
         client: Client,
         win_width: u32,
         win_height: u32,
+        center: Point,
 
         const Self = @This();
 
@@ -41,6 +42,7 @@ pub fn App(comptime Client: type) type {
                 .client = client,
                 .win_width = 0,
                 .win_height = 0,
+                .center = .{},
             };
         }
 
@@ -85,6 +87,8 @@ pub fn App(comptime Client: type) type {
                         if (w == self.win_width and h == self.win_height) return;
                         self.win_width = w;
                         self.win_height = h;
+                        self.center.x = w / 2;
+                        self.center.y = h / 2;
 
                         try self.client.handleResize(self.*);
                     },
@@ -126,3 +130,8 @@ pub fn App(comptime Client: type) type {
         }
     };
 }
+
+pub const Point = struct {
+    x: u32 = 0,
+    y: u32 = 0,
+};

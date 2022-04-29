@@ -42,7 +42,7 @@ pub fn App(comptime Client: type) type {
                 .client = client,
                 .win_width = 0,
                 .win_height = 0,
-                .center = .{},
+                .center = .{ .x = 0, .y = 0 },
             };
         }
 
@@ -136,8 +136,8 @@ pub fn App(comptime Client: type) type {
 }
 
 pub const Point = struct {
-    x: u32 = 0,
-    y: u32 = 0,
+    x: u32,
+    y: u32,
 };
 
 pub const Color = struct {

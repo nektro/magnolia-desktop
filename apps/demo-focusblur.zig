@@ -23,7 +23,7 @@ const Client = struct {
     pub fn init() !Self {
         return Self{
             .rect = .{
-                .top_left = .{},
+                .top_left = .{ .x = 0, .y = 0 },
                 .width = 0,
                 .height = 0,
                 .color = .{ .r = 0, .g = 1, .b = 0 },

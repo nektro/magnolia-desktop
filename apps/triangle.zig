@@ -29,10 +29,8 @@ const Client = struct {
         _ = self;
     }
 
-    pub fn handleResize(self: Self, app: App, width: u32, height: u32) !void {
+    pub fn handleResize(self: Self, app: App) !void {
         _ = self;
-        _ = width;
-        _ = height;
         draw(app);
     }
 };

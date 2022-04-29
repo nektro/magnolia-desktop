@@ -86,7 +86,7 @@ pub fn App(comptime Client: type) type {
                         self.win_width = w;
                         self.win_height = h;
 
-                        try self.client.handleResize(self.*, w, h);
+                        try self.client.handleResize(self.*);
                     },
                     c.KeymapNotify => {
                         _ = c.XRefreshKeyboardMapping(&ev.xmapping);

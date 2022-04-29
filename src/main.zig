@@ -107,12 +107,10 @@ pub fn App(comptime Client: type) type {
                     },
                     c.DestroyNotify => {
                         running = false;
-                        break;
                     },
                     c.ClientMessage => {
                         if (ev.xclient.data.l[0] == self.window.atom) {
                             running = false;
-                            break;
                         }
                     },
                     c.ButtonPress => {},

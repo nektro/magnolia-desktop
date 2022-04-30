@@ -22,9 +22,9 @@ fn addExe(b: *std.build.Builder, target: std.zig.CrossTarget, mode: std.builtin.
 
     const run_cmd = exe.run();
     run_cmd.step.dependOn(b.getInstallStep());
-    // if (b.args) |args| {
-    //     run_cmd.addArgs(args);
-    // }
+    if (b.args) |args| {
+        run_cmd.addArgs(args);
+    }
 
     const run_step = b.step(name, "Run the " ++ name ++ "app");
     run_step.dependOn(&run_cmd.step);

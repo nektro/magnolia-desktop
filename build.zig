@@ -29,8 +29,3 @@ fn addExe(b: *std.build.Builder, target: std.zig.CrossTarget, mode: std.builtin.
     const run_step = b.step(name, "Run the " ++ name ++ "app");
     run_step.dependOn(&run_cmd.step);
 }
-
-// https://materialui.co/flatuicolors
-//
-
-// hi mommy :) u r doing such a good job!!!!

@@ -1,14 +1,6 @@
 // mask   | EnterWindowMask | LeaveWindowMask
 // events | EnterNotify     | LeaveNotify
 
-// On ButtonPress and ButtonRelease the event object will contains an xbutton field.
-// This field has a button variable, which maps as follows:
-//      1 - left mouse
-//      2 - middle mouse
-//      3 - right mouse
-//      4 - scroll up
-//      5 - scroll down.
-
 const std = @import("std");
 const mag = @import("magnolia");
 const gl = mag.gl;

@@ -5,10 +5,7 @@ const gl = mag.gl;
 const App = mag.App(Client);
 
 pub fn main() !void {
-    var client = try Client.init();
-    defer client.deinit();
-
-    var app = try mag.App(Client).init(client);
+    var app = try mag.App(Client).init(.{});
     defer app.deinit();
 
     try app.start();
@@ -20,15 +17,6 @@ pub fn main() !void {
 
 const Client = struct {
     const Self = @This();
-
-    pub fn init() !Self {
-        return Self{};
-    }
-
-    pub fn deinit(self: Self) void {
-        _ = self;
-    }
-
     pub fn handleResize(self: Self, app: App) !void {
         _ = self;
         draw(app);

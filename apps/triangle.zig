@@ -3,6 +3,7 @@ const mag = @import("magnolia");
 const gl = mag.gl;
 
 const App = mag.App(Client);
+const root = @This();
 
 pub fn main() !void {
     var app = try mag.App(Client).init(.{});
@@ -16,10 +17,9 @@ pub fn main() !void {
 }
 
 const Client = struct {
-    const Self = @This();
-    pub fn handleResize(self: Self, app: App) !void {
+    pub fn draw(self: Client, app: App) !void {
         _ = self;
-        draw(app);
+        root.draw(app);
     }
 };
 

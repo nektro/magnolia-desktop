@@ -24,7 +24,7 @@ const Client = struct {
         _ = self;
     }
 
-    fn draw(self: Self, app: App) void {
+    pub fn draw(self: Self, app: App) error{}!void {
         gl.clear(.color);
 
         self.rect.draw(app.win_width, app.win_height);
@@ -35,8 +35,6 @@ const Client = struct {
     pub fn handleResize(self: *Self, app: App) !void {
         self.rect.top_left.x = app.center.x - (self.rect.width / 2);
         self.rect.top_left.y = app.center.y - (self.rect.height / 2);
-
-        self.draw(app);
     }
 };
 
@@ -49,7 +47,7 @@ pub fn main() !void {
 
     try app.start();
 
-    client.draw(app);
+    try client.draw(app);
 
     try app.run();
 }

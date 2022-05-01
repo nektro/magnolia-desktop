@@ -88,13 +88,14 @@ pub fn App(comptime Client: type) type {
                         const w = @intCast(u32, attribs.width);
                         const h = @intCast(u32, attribs.height);
 
-                        if (w == self.win_width and h == self.win_height) return;
                         self.win_width = w;
                         self.win_height = h;
                         self.center.x = w / 2;
                         self.center.y = h / 2;
 
-                        try self.client.handleResize(self.*);
+                        if (@hasDecl(Client, "handleResize")) try self.client.handleResize(self.*);
+                        // expose means all window content has been lost, trigger a manual full draw
+                        try self.client.draw(self.*);
                     },
                     c.KeymapNotify => {
                         _ = c.XRefreshKeyboardMapping(&ev.xmapping);

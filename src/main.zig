@@ -4,6 +4,9 @@ pub const c = @import("./c.zig");
 pub const x = @import("./x.zig");
 pub const glx = @import("./glx.zig");
 pub const gl = @import("./gl.zig");
+pub const Point = @import("./Point.zig");
+pub const Color = @import("./Color.zig");
+pub const Rect = @import("./Rect.zig");
 
 pub fn App(comptime Client: type) type {
     return struct {
@@ -141,56 +144,3 @@ pub fn App(comptime Client: type) type {
         }
     };
 }
-
-pub const Point = struct {
-    x: u32,
-    y: u32,
-};
-
-pub const Color = struct {
-    r: f32, // red value (bounded between 0 and 1)
-    g: f32, // green value (bounded between 0 and 1)
-    b: f32, // blue value (bounded between 0 and 1)
-
-    pub fn parseConst(comptime inp: *const [7:0]u8) Color {
-        comptime std.debug.assert(inp[0] == '#');
-        return Color{
-            .r = comptime @intToFloat(f32, std.fmt.parseInt(u8, inp[1..3], 16) catch unreachable) / 255.0,
-            .g = comptime @intToFloat(f32, std.fmt.parseInt(u8, inp[3..5], 16) catch unreachable) / 255.0,
-            .b = comptime @intToFloat(f32, std.fmt.parseInt(u8, inp[5..7], 16) catch unreachable) / 255.0,
-        };
-    }
-};
-
-pub const Rect = struct {
-    top_left: Point,
-    width: u32,
-    height: u32,
-    color: Color,
-
-    pub fn draw(self: Rect, win_width: u32, win_height: u32) void {
-        const wwf = @intToFloat(f32, win_width);
-        const whf = @intToFloat(f32, win_height);
-
-        const xf = @intToFloat(f32, self.top_left.x);
-        const yf = @intToFloat(f32, self.top_left.y);
-        const wf = @intToFloat(f32, self.width);
-        const hf = @intToFloat(f32, self.height);
-
-        const x1 = xf / wwf;
-        const y1 = yf / whf;
-        const x2 = (xf + wf) / wwf;
-        const y2 = (yf + hf) / whf;
-
-        var pts: @Vector(8, f32) = .{ x1, y1, x2, y1, x2, y2, x1, y2 };
-        pts *= @splat(8, @as(f32, 2));
-        pts -= @splat(8, @as(f32, 1));
-
-        gl.draw(&.{
-            gl.vertexc(pts[0], -pts[1], self.color.r, self.color.g, self.color.b),
-            gl.vertexp(pts[2], -pts[3]),
-            gl.vertexp(pts[4], -pts[5]),
-            gl.vertexp(pts[6], -pts[7]),
-        });
-    }
-};

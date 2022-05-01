@@ -69,7 +69,7 @@ pub const Window = struct {
         attribs.event_mask = c.ExposureMask;
 
         // TODO: handle C error
-        const win = c.XCreateWindow(xdisplay.display, xdisplay.rootWindow(), 0, 0, 320, 200, 0, xvisual.info.*.depth, c.InputOutput, xvisual.visual, c.CWBackPixel | c.CWColormap | c.CWBorderPixel | c.CWEventMask, &attribs);
+        const win = c.XCreateWindow(xdisplay.display, xdisplay.rootWindow(), 0, 0, 800, 600, 0, xvisual.info.*.depth, c.InputOutput, xvisual.visual, c.CWBackPixel | c.CWColormap | c.CWBorderPixel | c.CWEventMask, &attribs);
 
         // allow X to intercept user hitting window 'close' button
         // TODO: handle C error

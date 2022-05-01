@@ -80,8 +80,8 @@ pub fn App(comptime Client: type) type {
             while (running) {
                 _ = c.XNextEvent(self.window.display, &ev);
 
-                switch (ev.type) {
-                    c.Expose => {
+                switch (@intToEnum(x.EventType, ev.type)) {
+                    .Expose => {
                         const attribs = self.window.attributes();
                         c.glViewport(0, 0, attribs.width, attribs.height);
 
@@ -97,10 +97,10 @@ pub fn App(comptime Client: type) type {
                         // expose means all window content has been lost, trigger a manual full draw
                         try self.client.draw(self.*);
                     },
-                    c.KeymapNotify => {
+                    .KeymapNotify => {
                         _ = c.XRefreshKeyboardMapping(&ev.xmapping);
                     },
-                    c.KeyPress => {
+                    .KeyPress => {
                         if (!self.active) continue;
                         len = @intCast(usize, c.XLookupString(&ev.xkey, &str, 25, &keysym, null));
                         if (len > 0) {
@@ -108,7 +108,7 @@ pub fn App(comptime Client: type) type {
                             std.log.debug("key down: {d}", .{keysym});
                         }
                     },
-                    c.KeyRelease => {
+                    .KeyRelease => {
                         if (!self.active) continue;
                         len = @intCast(usize, c.XLookupString(&ev.xkey, &str, 25, &keysym, null));
                         if (len > 0) {
@@ -116,26 +116,32 @@ pub fn App(comptime Client: type) type {
                             std.log.debug("key up: {d}", .{keysym});
                         }
                     },
-                    c.DestroyNotify => {
+                    .DestroyNotify => {
                         if (!self.active) continue;
                         running = false;
                     },
-                    c.ClientMessage => {
+                    .ClientMessage => {
                         if (!self.active) continue;
                         if (ev.xclient.data.l[0] == self.window.atom) {
                             running = false;
                         }
                     },
-                    c.ButtonPress => {},
-                    c.ButtonRelease => {},
-                    c.MotionNotify => {},
-                    c.EnterNotify => {
+                    .EnterNotify => {
                         self.active = true;
                         if (@hasDecl(Client, "handleEnter")) try self.client.handleEnter(self.*);
                     },
-                    c.LeaveNotify => {
+                    .LeaveNotify => {
                         self.active = false;
                         if (@hasDecl(Client, "handleLeave")) try self.client.handleLeave(self.*);
+                    },
+                    .ButtonPress => {
+                        if (!self.active) continue;
+                    },
+                    .ButtonRelease => {
+                        if (!self.active) continue;
+                    },
+                    .MotionNotify => {
+                        if (!self.active) continue;
                     },
                     else => {
                         std.log.info("unrecognized event: {d}", .{ev.type});

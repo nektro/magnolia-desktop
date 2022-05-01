@@ -79,8 +79,7 @@ pub fn App(comptime Client: type) type {
 
                 switch (ev.type) {
                     c.Expose => {
-                        var attribs: c.XWindowAttributes = undefined;
-                        _ = c.XGetWindowAttributes(self.window.display, self.window.window, &attribs);
+                        const attribs = self.window.attributes();
                         c.glViewport(0, 0, attribs.width, attribs.height);
 
                         const w = @intCast(u32, attribs.width);

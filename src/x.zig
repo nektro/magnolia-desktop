@@ -113,4 +113,11 @@ pub const Window = struct {
         _ = c.XClearWindow(self.display, self.window);
         _ = c.XMapRaised(self.display, self.window);
     }
+
+    pub fn attributes(self: Window) c.XWindowAttributes {
+        var attribs: c.XWindowAttributes = undefined;
+        // TODO: investigate possible return values
+        _ = c.XGetWindowAttributes(self.display, self.window, &attribs);
+        return attribs;
+    }
 };

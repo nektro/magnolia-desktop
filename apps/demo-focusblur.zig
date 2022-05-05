@@ -27,12 +27,12 @@ const Client = struct {
         _ = self;
     }
 
-    pub fn draw(self: Self, app: App) !void {
-        gl.clear(.color);
-
+    pub fn draw(self: Self, app: App, x: u32, y: u32, width: u32, height: u32) !void {
+        _ = x;
+        _ = y;
+        _ = width;
+        _ = height;
         self.rect.draw(app.win_width, app.win_height);
-
-        gl.commitFrame(app.window);
     }
 
     pub fn handleResize(self: *Self, app: App) !void {
@@ -43,13 +43,13 @@ const Client = struct {
     pub fn handleEnter(self: *Self, app: App) !void {
         self.rect.color = mag.Color.parseConst("#2ECC71");
 
-        try self.draw(app);
+        try app.draw();
     }
 
     pub fn handleLeave(self: *Self, app: App) !void {
         self.rect.color = mag.Color.parseConst("#E74C3C");
 
-        try self.draw(app);
+        try app.draw();
     }
 };
 
@@ -62,7 +62,7 @@ pub fn main() !void {
 
     try app.start();
 
-    try client.draw(app);
+    try app.draw();
 
     try app.run();
 }

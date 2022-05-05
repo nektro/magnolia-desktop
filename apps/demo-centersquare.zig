@@ -24,12 +24,12 @@ const Client = struct {
         _ = self;
     }
 
-    pub fn draw(self: Self, app: App) error{}!void {
-        gl.clear(.color);
-
+    pub fn draw(self: Self, app: App, x: u32, y: u32, width: u32, height: u32) error{}!void {
+        _ = x;
+        _ = y;
+        _ = width;
+        _ = height;
         self.rect.draw(app.win_width, app.win_height);
-
-        gl.commitFrame(app.window);
     }
 
     pub fn handleResize(self: *Self, app: App) !void {
@@ -47,7 +47,7 @@ pub fn main() !void {
 
     try app.start();
 
-    try client.draw(app);
+    try app.draw();
 
     try app.run();
 }

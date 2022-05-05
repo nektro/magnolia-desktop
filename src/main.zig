@@ -95,7 +95,7 @@ pub fn App(comptime Client: type) type {
 
                         if (@hasDecl(Client, "handleResize")) try self.client.handleResize(self.*);
                         // expose means all window content has been lost, trigger a manual full draw
-                        try self.client.draw(self.*);
+                        try self.draw();
                     },
                     .keymap_notify => {
                         _ = c.XRefreshKeyboardMapping(&ev.xmapping);
@@ -148,6 +148,12 @@ pub fn App(comptime Client: type) type {
                     },
                 }
             }
+        }
+
+        pub fn draw(self: Self) !void {
+            gl.clear(.color);
+            try self.client.draw(self, 0, 0, self.win_width, self.win_height);
+            gl.commitFrame(self.window);
         }
     };
 }

@@ -17,20 +17,21 @@ pub fn main() !void {
 }
 
 const Client = struct {
-    pub fn draw(self: Client, app: App) !void {
+    pub fn draw(self: Client, app: App, x: u32, y: u32, width: u32, height: u32) !void {
         _ = self;
+        _ = x;
+        _ = y;
+        _ = width;
+        _ = height;
         root.draw(app);
     }
 };
 
 fn draw(app: App) void {
-    gl.clear(.color);
-
+    _ = app;
     gl.draw(&.{
         gl.vertexc(-1, -1, 1, 0, 0),
         gl.vertexc(0, 1, 0, 1, 0),
         gl.vertexc(1, -1, 0, 0, 1),
     });
-
-    gl.commitFrame(app.window);
 }

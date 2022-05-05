@@ -81,7 +81,7 @@ pub fn App(comptime Client: type) type {
                 _ = c.XNextEvent(self.window.display, &ev);
 
                 switch (@intToEnum(x.EventType, ev.type)) {
-                    .Expose => {
+                    .expose => {
                         const attribs = self.window.attributes();
                         c.glViewport(0, 0, attribs.width, attribs.height);
 
@@ -97,10 +97,10 @@ pub fn App(comptime Client: type) type {
                         // expose means all window content has been lost, trigger a manual full draw
                         try self.client.draw(self.*);
                     },
-                    .KeymapNotify => {
+                    .keymap_notify => {
                         _ = c.XRefreshKeyboardMapping(&ev.xmapping);
                     },
-                    .KeyPress => {
+                    .key_press => {
                         if (!self.active) continue;
                         len = @intCast(usize, c.XLookupString(&ev.xkey, &str, 25, &keysym, null));
                         if (len > 0) {
@@ -108,7 +108,7 @@ pub fn App(comptime Client: type) type {
                             std.log.debug("key down: {d}", .{keysym});
                         }
                     },
-                    .KeyRelease => {
+                    .key_release => {
                         if (!self.active) continue;
                         len = @intCast(usize, c.XLookupString(&ev.xkey, &str, 25, &keysym, null));
                         if (len > 0) {
@@ -116,31 +116,31 @@ pub fn App(comptime Client: type) type {
                             std.log.debug("key up: {d}", .{keysym});
                         }
                     },
-                    .DestroyNotify => {
+                    .destroy_notify => {
                         if (!self.active) continue;
                         running = false;
                     },
-                    .ClientMessage => {
+                    .client_message => {
                         if (!self.active) continue;
                         if (ev.xclient.data.l[0] == self.window.atom) {
                             running = false;
                         }
                     },
-                    .EnterNotify => {
+                    .enter_notify => {
                         self.active = true;
                         if (@hasDecl(Client, "handleEnter")) try self.client.handleEnter(self.*);
                     },
-                    .LeaveNotify => {
+                    .leave_notify => {
                         self.active = false;
                         if (@hasDecl(Client, "handleLeave")) try self.client.handleLeave(self.*);
                     },
-                    .ButtonPress => {
+                    .button_press => {
                         if (!self.active) continue;
                     },
-                    .ButtonRelease => {
+                    .button_release => {
                         if (!self.active) continue;
                     },
-                    .MotionNotify => {
+                    .motion_notify => {
                         if (!self.active) continue;
                     },
                     else => {

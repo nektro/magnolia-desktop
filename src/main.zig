@@ -8,6 +8,8 @@ pub const gl = @import("./gl.zig");
 pub const Point = @import("./Point.zig");
 pub const Color = @import("./Color.zig");
 pub const Rect = @import("./Rect.zig");
+pub const NodeItem = *anyopaque;
+pub const Node = enum(u32) { _ };
 
 pub fn App(comptime Elements: []const type) type {
     const Client = Elements[0];
@@ -189,7 +191,6 @@ pub fn App(comptime Elements: []const type) type {
         }
 
         pub fn drawNode(self: Self, node: Node, px: u32, py: u32, width: u32, height: u32) anyerror!void {
-            std.debug.assert(node != Node.none);
             const i = @enumToInt(node);
 
             inline for (AllElements) |T, j| {
@@ -205,12 +206,6 @@ pub fn App(comptime Elements: []const type) type {
 }
 
 const RootApp = root.App;
-
-pub const NodeItem = *anyopaque;
-pub const Node = enum(u32) {
-    none = std.math.maxInt(u32),
-    _,
-};
 
 pub const Grid = struct {
     children: []const Node,

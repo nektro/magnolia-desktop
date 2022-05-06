@@ -21,7 +21,7 @@ pub fn main() !void {
 }
 
 const Client = struct {
-    child: mag.Node = mag.Node.none,
+    child: ?mag.Node = null,
 
     pub fn postinit(self: *Client, app: *App) !void {
         self.child = try mag.Grid.new(app, &.{
@@ -37,6 +37,6 @@ const Client = struct {
     }
 
     pub fn draw(self: Client, app: App, x: u32, y: u32, width: u32, height: u32) !void {
-        try app.drawNode(self.child, x, y, width, height);
+        try app.drawNode(self.child.?, x, y, width, height);
     }
 };

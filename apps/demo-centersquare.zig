@@ -2,7 +2,7 @@ const std = @import("std");
 const mag = @import("magnolia");
 const gl = mag.gl;
 
-const App = mag.App(Client);
+const App = mag.App(&.{Client});
 
 const Client = struct {
     rect: mag.Rect,
@@ -42,7 +42,7 @@ pub fn main() !void {
     var client = try Client.init();
     defer client.deinit();
 
-    var app = try mag.App(Client).init(client);
+    var app = try App.init(undefined, client);
     defer app.deinit();
 
     try app.start();

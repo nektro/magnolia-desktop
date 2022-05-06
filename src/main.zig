@@ -1,4 +1,5 @@
 const std = @import("std");
+const root = @import("root");
 
 pub const c = @import("./c.zig");
 pub const x = @import("./x.zig");
@@ -8,7 +9,14 @@ pub const Point = @import("./Point.zig");
 pub const Color = @import("./Color.zig");
 pub const Rect = @import("./Rect.zig");
 
-pub fn App(comptime Client: type) type {
+pub fn App(comptime Elements: []const type) type {
+    const Client = Elements[0];
+    const Builtins = &[_]type{
+        Grid,
+        Row,
+        Color,
+    };
+    const AllElements = Builtins ++ Elements;
     return struct {
         display: x.Display,
         visual: glx.Visual,
@@ -18,10 +26,13 @@ pub fn App(comptime Client: type) type {
         win_height: u32,
         center: Point,
         active: bool,
+        alloc: std.mem.Allocator,
+        nodes: std.ArrayListUnmanaged(NodeItem),
+        types: std.ArrayListUnmanaged(u32),
 
         const Self = @This();
 
-        pub fn init(client: Client) !Self {
+        pub fn init(alloc: std.mem.Allocator, client: Client) !Self {
             // Open the display
             const display = try x.Display.init();
 
@@ -48,13 +59,19 @@ pub fn App(comptime Client: type) type {
                 .win_height = 0,
                 .center = .{ .x = 0, .y = 0 },
                 .active = false,
+                .alloc = alloc,
+                .nodes = .{},
+                .types = .{},
             };
         }
 
-        pub fn deinit(self: Self) void {
+        pub fn deinit(self: *Self) void {
             self.window.deinit();
             self.visual.deinit();
             self.display.deinit();
+            // TODO: free items in self.nodes
+            self.nodes.deinit(self.alloc);
+            self.types.deinit(self.alloc);
         }
 
         pub fn start(self: Self) !void {
@@ -155,5 +172,73 @@ pub fn App(comptime Client: type) type {
             try self.client.draw(self, 0, 0, self.win_width, self.win_height);
             gl.commitFrame(self.window);
         }
+
+        pub fn newNode(self: *Self, element: anytype) !Node {
+            const ET = @TypeOf(element);
+            inline for (AllElements) |IT, i| {
+                if (ET == IT) {
+                    const r = self.nodes.items.len;
+                    const t = try self.alloc.create(IT);
+                    t.* = element;
+                    try self.nodes.append(self.alloc, t);
+                    try self.types.append(self.alloc, i);
+                    return @intToEnum(Node, r);
+                }
+            }
+            @compileError(@typeName(ET) ++ " not found in list of provided element types");
+        }
+
+        pub fn drawNode(self: Self, node: Node, px: u32, py: u32, width: u32, height: u32) anyerror!void {
+            std.debug.assert(node != Node.none);
+            const i = @enumToInt(node);
+
+            inline for (AllElements) |T, j| {
+                if (self.types.items[i] == j) {
+                    const elem = @ptrCast(*T, @alignCast(@alignOf(T), self.nodes.items[i]));
+                    try elem.draw(self, px, py, width, height);
+                    return;
+                }
+            }
+            unreachable;
+        }
     };
 }
+
+const RootApp = root.App;
+
+pub const NodeItem = *anyopaque;
+pub const Node = enum(u32) {
+    none = std.math.maxInt(u32),
+    _,
+};
+
+pub const Grid = struct {
+    children: []const Node,
+
+    pub fn new(app: *RootApp, children: []const Node) !Node {
+        // TODO assert .children are all Row
+        return try app.newNode(Grid{ .children = try app.alloc.dupe(Node, children) });
+    }
+
+    pub fn draw(self: Grid, app: RootApp, px: u32, y: u32, width: u32, height: u32) !void {
+        const h = height / @intCast(u32, self.children.len);
+        for (self.children) |item, i| {
+            try app.drawNode(item, px, y + @intCast(u32, h * i), width, h);
+        }
+    }
+};
+
+pub const Row = struct {
+    children: []const Node,
+
+    pub fn new(app: *RootApp, children: []const Node) !Node {
+        return try app.newNode(Row{ .children = try app.alloc.dupe(Node, children) });
+    }
+
+    pub fn draw(self: Row, app: RootApp, px: u32, y: u32, width: u32, height: u32) !void {
+        const w = width / @intCast(u32, self.children.len);
+        for (self.children) |item, i| {
+            try app.drawNode(item, px + @intCast(u32, w * i), y, w, height);
+        }
+    }
+};

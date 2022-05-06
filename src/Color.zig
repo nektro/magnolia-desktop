@@ -1,5 +1,7 @@
 const Color = @This();
 const std = @import("std");
+const root = @import("root");
+const mag = @import("./main.zig");
 
 r: f32, // red value (bounded between 0 and 1)
 g: f32, // green value (bounded between 0 and 1)
@@ -12,4 +14,18 @@ pub fn parseConst(comptime inp: *const [7:0]u8) Color {
         .g = comptime @intToFloat(f32, std.fmt.parseInt(u8, inp[3..5], 16) catch unreachable) / 255.0,
         .b = comptime @intToFloat(f32, std.fmt.parseInt(u8, inp[5..7], 16) catch unreachable) / 255.0,
     };
+}
+
+pub fn new(self: Color, app: *root.App) !mag.Node {
+    return try app.newNode(self);
+}
+
+pub fn draw(self: Color, app: root.App, x: u32, y: u32, width: u32, height: u32) !void {
+    const r = mag.Rect{
+        .top_left = mag.Point{ .x = x, .y = y },
+        .width = width,
+        .height = height,
+        .color = self,
+    };
+    r.draw(app.win_width, app.win_height);
 }

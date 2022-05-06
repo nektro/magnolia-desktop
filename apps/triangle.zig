@@ -2,11 +2,11 @@ const std = @import("std");
 const mag = @import("magnolia");
 const gl = mag.gl;
 
-const App = mag.App(Client);
+const App = mag.App(&.{Client});
 const root = @This();
 
 pub fn main() !void {
-    var app = try mag.App(Client).init(.{});
+    var app = try App.init(undefined, .{});
     defer app.deinit();
 
     try app.start();

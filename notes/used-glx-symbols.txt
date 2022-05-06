@@ -1,0 +1,35 @@
+taken 05 May 2022
+
+LLD Link...
+ld.lld: error: undefined symbol: XClearWindow
+ld.lld: error: undefined symbol: XCloseDisplay
+ld.lld: error: undefined symbol: XCreateColormap
+ld.lld: error: undefined symbol: XCreateWindow
+ld.lld: error: undefined symbol: XDestroyWindow
+ld.lld: error: undefined symbol: XFree
+ld.lld: error: undefined symbol: XFreeColormap
+ld.lld: error: undefined symbol: XGetWindowAttributes
+ld.lld: error: undefined symbol: XInternAtom
+ld.lld: error: undefined symbol: XLookupString
+ld.lld: error: undefined symbol: XMapRaised
+ld.lld: error: undefined symbol: XNextEvent
+ld.lld: error: undefined symbol: XOpenDisplay
+ld.lld: error: undefined symbol: XRefreshKeyboardMapping
+ld.lld: error: undefined symbol: XSelectInput
+ld.lld: error: undefined symbol: XSetWMProtocols
+
+ld.lld: error: undefined symbol: glBegin
+ld.lld: error: undefined symbol: glClear
+ld.lld: error: undefined symbol: glClearColor
+ld.lld: error: undefined symbol: glColor4f
+ld.lld: error: undefined symbol: glEnd
+ld.lld: error: undefined symbol: glGetString
+ld.lld: error: undefined symbol: glVertex3f
+ld.lld: error: undefined symbol: glViewport
+
+ld.lld: error: undefined symbol: glXChooseVisual
+ld.lld: error: undefined symbol: glXCreateContext
+ld.lld: error: undefined symbol: glXDestroyContext
+ld.lld: error: undefined symbol: glXMakeCurrent
+ld.lld: error: undefined symbol: glXQueryVersion
+ld.lld: error: undefined symbol: glXSwapBuffers

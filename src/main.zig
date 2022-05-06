@@ -192,13 +192,13 @@ pub fn App(comptime Elements: []const type) type {
             @compileError(@typeName(ET) ++ " not found in list of provided element types");
         }
 
-        pub fn drawNode(self: Self, node: Node, px: u32, py: u32, width: u32, height: u32) anyerror!void {
+        pub fn drawNode(self: Self, node: Node, x: u32, y: u32, width: u32, height: u32) anyerror!void {
             const i = @enumToInt(node);
 
             inline for (AllElements) |T, j| {
                 if (self.types.items[i] == j) {
                     const elem = @ptrCast(*T, @alignCast(@alignOf(T), self.nodes.items[i]));
-                    try elem.draw(self, px, py, width, height);
+                    try elem.draw(self, x, y, width, height);
                     return;
                 }
             }

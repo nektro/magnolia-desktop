@@ -38,8 +38,8 @@ fn color3(r: f32, g: f32, b: f32) void {
     return color4(r, g, b, 1);
 }
 
-fn vertex2(px: f32, py: f32) void {
-    c.glVertex3f(px, py, 0);
+fn vertex2(x: f32, y: f32) void {
+    c.glVertex3f(x, y, 0);
 }
 
 pub fn clear(
@@ -87,16 +87,16 @@ pub fn draw(items: []const Path.Item) void {
     return drawRaw(.POLYGON, items);
 }
 
-pub fn vertexc(px: f32, py: f32, r: f32, g: f32, b: f32) Path.Item {
+pub fn vertexc(x: f32, y: f32, r: f32, g: f32, b: f32) Path.Item {
     return Path.Item{ .vertexc = .{
-        .{ .x = px, .y = py },
+        .{ .x = x, .y = y },
         .{ .r = r, .g = g, .b = b },
     } };
 }
 
-pub fn vertexp(px: f32, py: f32) Path.Item {
+pub fn vertexp(x: f32, y: f32) Path.Item {
     return Path.Item{ .vertexp = .{
-        .{ .x = px, .y = py },
+        .{ .x = x, .y = y },
     } };
 }
 

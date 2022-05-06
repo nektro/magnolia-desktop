@@ -24,7 +24,7 @@ const Client = struct {
     child: ?mag.Node = null,
 
     pub fn postinit(self: *Client, app: *App) !void {
-        self.child = try mag.Grid.new(app, &.{
+        self.child = try mag.StrictGrid.new(app, &.{
             try mag.Row.new(app, &.{
                 try mag.Color.parseConst("#27AE60").new(app),
                 try mag.Color.parseConst("#2980B9").new(app),

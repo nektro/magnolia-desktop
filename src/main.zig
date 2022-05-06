@@ -10,11 +10,13 @@ pub const Color = @import("./Color.zig");
 pub const Rect = @import("./Rect.zig");
 pub const NodeItem = *anyopaque;
 pub const Node = enum(u32) { _ };
+pub const StrictGrid = @import("./StrictGrid.zig");
+pub const Row = @import("./Row.zig");
 
 pub fn App(comptime Elements: []const type) type {
     const Client = Elements[0];
     const Builtins = &[_]type{
-        Grid,
+        StrictGrid,
         Row,
         Color,
     };
@@ -204,36 +206,3 @@ pub fn App(comptime Elements: []const type) type {
         }
     };
 }
-
-const RootApp = root.App;
-
-pub const Grid = struct {
-    children: []const Node,
-
-    pub fn new(app: *RootApp, children: []const Node) !Node {
-        // TODO assert .children are all Row
-        return try app.newNode(Grid{ .children = try app.alloc.dupe(Node, children) });
-    }
-
-    pub fn draw(self: Grid, app: RootApp, px: u32, y: u32, width: u32, height: u32) !void {
-        const h = height / @intCast(u32, self.children.len);
-        for (self.children) |item, i| {
-            try app.drawNode(item, px, y + @intCast(u32, h * i), width, h);
-        }
-    }
-};
-
-pub const Row = struct {
-    children: []const Node,
-
-    pub fn new(app: *RootApp, children: []const Node) !Node {
-        return try app.newNode(Row{ .children = try app.alloc.dupe(Node, children) });
-    }
-
-    pub fn draw(self: Row, app: RootApp, px: u32, y: u32, width: u32, height: u32) !void {
-        const w = width / @intCast(u32, self.children.len);
-        for (self.children) |item, i| {
-            try app.drawNode(item, px + @intCast(u32, w * i), y, w, height);
-        }
-    }
-};

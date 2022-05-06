@@ -2,7 +2,7 @@ const std = @import("std");
 const root = @import("root");
 
 pub const c = @import("./c.zig");
-pub const x = @import("./x.zig");
+pub const x11 = @import("./x11.zig");
 pub const glx = @import("./glx.zig");
 pub const gl = @import("./gl.zig");
 pub const Point = @import("./Point.zig");
@@ -22,9 +22,9 @@ pub fn App(comptime Elements: []const type) type {
     };
     const AllElements = Builtins ++ Elements;
     return struct {
-        display: x.Display,
+        display: x11.Display,
         visual: glx.Visual,
-        window: x.Window,
+        window: x11.Window,
         client: Client,
         win_width: u32,
         win_height: u32,
@@ -38,7 +38,7 @@ pub fn App(comptime Elements: []const type) type {
 
         pub fn init(alloc: std.mem.Allocator, client: Client) !Self {
             // Open the display
-            const display = try x.Display.init();
+            const display = try x11.Display.init();
 
             // Check GLX version
             if (!glx.isAtLeast(display, 1, 2)) {
@@ -52,7 +52,7 @@ pub fn App(comptime Elements: []const type) type {
             const visual = try glx.Visual.init(display);
 
             // Open the window
-            const window = try x.Window.init(display, visual);
+            const window = try x11.Window.init(display, visual);
 
             return Self{
                 .display = display,
@@ -101,7 +101,7 @@ pub fn App(comptime Elements: []const type) type {
             while (running) {
                 _ = c.XNextEvent(self.window.display, &ev);
 
-                switch (@intToEnum(x.EventType, ev.type)) {
+                switch (@intToEnum(x11.EventType, ev.type)) {
                     .expose => {
                         const attribs = self.window.attributes();
                         c.glViewport(0, 0, attribs.width, attribs.height);

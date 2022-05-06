@@ -3,7 +3,7 @@ const string = []const u8;
 const extras = @import("extras");
 
 const c = @import("./c.zig");
-const x = @import("./x.zig");
+const x11 = @import("./x11.zig");
 
 pub const consts = @import("./gl.consts.zig");
 
@@ -100,6 +100,6 @@ pub fn vertexp(px: f32, py: f32) Path.Item {
     } };
 }
 
-pub fn commitFrame(xwindow: x.Window) void {
+pub fn commitFrame(xwindow: x11.Window) void {
     c.glXSwapBuffers(xwindow.display, xwindow.window);
 }

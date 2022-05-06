@@ -1,9 +1,9 @@
 const std = @import("std");
 
 const c = @import("./c.zig");
-const x = @import("./x.zig");
+const x11 = @import("./x11.zig");
 
-pub fn version(xdisplay: x.Display) ?std.SemanticVersion {
+pub fn version(xdisplay: x11.Display) ?std.SemanticVersion {
     var majorGLX: c_int = 0;
     var minorGLX: c_int = 0;
 
@@ -18,7 +18,7 @@ pub fn version(xdisplay: x.Display) ?std.SemanticVersion {
     };
 }
 
-pub fn isAtLeast(xdisplay: x.Display, major: usize, minor: usize) bool {
+pub fn isAtLeast(xdisplay: x11.Display, major: usize, minor: usize) bool {
     const input = std.SemanticVersion{ .major = major, .minor = minor, .patch = 0 };
     const vers = version(xdisplay) orelse return false;
     return input.order(vers) != .gt;
@@ -43,7 +43,7 @@ pub const Visual = struct {
     };
     // zig fmt: on
 
-    pub fn init(xdisplay: x.Display) !Visual {
+    pub fn init(xdisplay: x11.Display) !Visual {
         // TODO: handle C error
         const vis = c.glXChooseVisual(xdisplay.display, xdisplay.screenId, &attribs);
         if (vis == null) return error.TODO;

@@ -27,5 +27,5 @@ pub fn draw(self: Color, app: root.App, x: u32, y: u32, width: u32, height: u32)
         .height = height,
         .color = self,
     };
-    r.draw(app.win_width, app.win_height);
+    r.drawAbs(app.win_width, app.win_height);
 }

@@ -7,7 +7,7 @@ width: u32,
 height: u32,
 color: mag.Color,
 
-pub fn draw(self: Rect, win_width: u32, win_height: u32) void {
+pub fn drawAbs(self: Rect, win_width: u32, win_height: u32) void {
     const wwf = @intToFloat(f32, win_width);
     const whf = @intToFloat(f32, win_height);
 

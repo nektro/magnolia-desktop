@@ -98,14 +98,19 @@ pub const Window = struct {
     }
 
     pub fn enableEvents(self: Window) !void {
-        const mask_keys = c.KeymapStateMask | c.KeyPressMask | c.KeyReleaseMask;
-        const mask_btns = c.ButtonPressMask | c.ButtonReleaseMask;
-        const mask_mouse = c.PointerMotionMask;
-        const mask_focus = c.EnterWindowMask | c.LeaveWindowMask;
-        const mask = mask_keys | mask_btns | mask_mouse | mask_focus;
-
+        const mask = EventMask.init(&.{
+            .exposure,
+            .keymap_state,
+            .key_press,
+            .key_release,
+            .button_press,
+            .button_release,
+            .pointer_motion,
+            .enter_window,
+            .leave_window,
+        });
         // TODO: handle C error
-        _ = c.XSelectInput(self.display, self.window, c.ExposureMask | mask);
+        _ = c.XSelectInput(self.display, self.window, mask.int());
     }
 
     pub fn show(self: Window) !void {
@@ -119,6 +124,77 @@ pub const Window = struct {
         // TODO: investigate possible return values
         _ = c.XGetWindowAttributes(self.display, self.window, &attribs);
         return attribs;
+    }
+};
+
+pub const EventMask = packed struct {
+    key_press: bool = false,
+    key_release: bool = false,
+    button_press: bool = false,
+    button_release: bool = false,
+    enter_window: bool = false,
+    leave_window: bool = false,
+    pointer_motion: bool = false,
+    pointer_motion_hint: bool = false,
+    button1_motion: bool = false,
+    button2_motion: bool = false,
+    button3_motion: bool = false,
+    button4_motion: bool = false,
+    button5_motion: bool = false,
+    button_motion: bool = false,
+    keymap_state: bool = false,
+    exposure: bool = false,
+    visibility_change: bool = false,
+    structure_notify: bool = false,
+    resize_redirect: bool = false,
+    substructure_notify: bool = false,
+    substructure_redirect: bool = false,
+    focus_change: bool = false,
+    property_change: bool = false,
+    colormap_change: bool = false,
+    owner_grab_button: bool = false,
+
+    pub fn init(comptime on: []const std.meta.FieldEnum(EventMask)) EventMask {
+        var em = EventMask{};
+        inline for (on) |item| {
+            @field(em, @tagName(item)) = true;
+        }
+        return em;
+    }
+
+    pub fn int(self: EventMask) c_long {
+        return @as(c_long, @bitCast(u25, self));
+    }
+
+    comptime {
+        // zig fmt: off
+        const assert = std.debug.assert;
+        assert(init(&.{.key_press}).int()             == 1 <<  0);
+        assert(init(&.{.key_release}).int()           == 1 <<  1);
+        assert(init(&.{.button_press}).int()          == 1 <<  2);
+        assert(init(&.{.button_release}).int()        == 1 <<  3);
+        assert(init(&.{.enter_window}).int()          == 1 <<  4);
+        assert(init(&.{.leave_window}).int()          == 1 <<  5);
+        assert(init(&.{.pointer_motion}).int()        == 1 <<  6);
+        assert(init(&.{.pointer_motion_hint}).int()   == 1 <<  7);
+        assert(init(&.{.button1_motion}).int()        == 1 <<  8);
+        assert(init(&.{.button2_motion}).int()        == 1 <<  9);
+        assert(init(&.{.button3_motion}).int()        == 1 << 10);
+        assert(init(&.{.button4_motion}).int()        == 1 << 11);
+        assert(init(&.{.button5_motion}).int()        == 1 << 12);
+        assert(init(&.{.button_motion}).int()         == 1 << 13);
+        assert(init(&.{.keymap_state}).int()          == 1 << 14);
+        assert(init(&.{.exposure}).int()              == 1 << 15);
+        assert(init(&.{.visibility_change}).int()     == 1 << 16);
+        assert(init(&.{.structure_notify}).int()      == 1 << 17);
+        assert(init(&.{.resize_redirect}).int()       == 1 << 18);
+        assert(init(&.{.substructure_notify}).int()   == 1 << 19);
+        assert(init(&.{.substructure_redirect}).int() == 1 << 20);
+        assert(init(&.{.focus_change}).int()          == 1 << 21);
+        assert(init(&.{.property_change}).int()       == 1 << 22);
+        assert(init(&.{.colormap_change}).int()       == 1 << 23);
+        assert(init(&.{.owner_grab_button}).int()     == 1 << 24);
+        // zig fmt: on
     }
 };
 

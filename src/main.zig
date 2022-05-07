@@ -24,7 +24,7 @@ pub fn App(comptime Elements: []const type) type {
         Color,
         Rect,
     };
-    const AllElements = &Builtins ++ Elements;
+    const AllElements = &Builtins ++ Elements[1..];
     return struct {
         display: x11.Display,
         visual: glx.Visual,
@@ -242,7 +242,7 @@ pub fn App(comptime Elements: []const type) type {
         pub fn getNodeWidth(self: Self, node: Node) u32 {
             const i = @enumToInt(node);
             inline for (AllElements) |T, j| {
-                if (T != Client and self.types.items[i] == j) {
+                if (self.types.items[i] == j) {
                     return extras.ptrCast(T, self.nodes.items[i]).getWidth(self);
                 }
             }
@@ -252,7 +252,7 @@ pub fn App(comptime Elements: []const type) type {
         pub fn getNodeHeight(self: Self, node: Node) u32 {
             const i = @enumToInt(node);
             inline for (AllElements) |T, j| {
-                if (T != Client and self.types.items[i] == j) {
+                if (self.types.items[i] == j) {
                     return extras.ptrCast(T, self.nodes.items[i]).getHeight(self);
                 }
             }

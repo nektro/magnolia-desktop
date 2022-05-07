@@ -193,6 +193,8 @@ pub fn App(comptime Elements: []const type) type {
         }
 
         pub fn drawNode(self: Self, node: Node, x: u32, y: u32, width: u32, height: u32) anyerror!void {
+            if (width == 0) return;
+            if (height == 0) return;
             const i = @enumToInt(node);
 
             inline for (AllElements) |T, j| {

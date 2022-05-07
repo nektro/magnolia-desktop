@@ -199,7 +199,7 @@ pub fn App(comptime Elements: []const type) type {
 
             inline for (AllElements) |T, j| {
                 if (self.types.items[i] == j) {
-                    const elem = @ptrCast(*T, @alignCast(@alignOf(T), self.nodes.items[i]));
+                    const elem = extras.ptrCast(T, self.nodes.items[i]);
                     try elem.draw(self, x, y, width, height);
                     return;
                 }

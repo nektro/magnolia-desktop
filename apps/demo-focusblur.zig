@@ -15,7 +15,7 @@ const Client = struct {
     pub fn init() !Self {
         return Self{
             .rect = .{
-                .top_left = .{ .x = 0, .y = 0 },
+                // .top_left = .{ .x = 0, .y = 0 },
                 .width = 0,
                 .height = 0,
                 .color = .{ .r = 0, .g = 1, .b = 0 },
@@ -28,11 +28,10 @@ const Client = struct {
     }
 
     pub fn draw(self: Self, app: App, x: u32, y: u32, width: u32, height: u32) !void {
-        _ = x;
-        _ = y;
+        _ = app;
         _ = width;
         _ = height;
-        self.rect.drawAbs(app.win_width, app.win_height);
+        self.rect.drawAbs(.{ .x = x, .y = y }, app.win_width, app.win_height);
     }
 
     pub fn handleResize(self: *Self, app: App) !void {

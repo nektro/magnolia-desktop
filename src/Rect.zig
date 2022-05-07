@@ -2,17 +2,16 @@ const Self = @This();
 const mag = @import("./main.zig");
 const gl = mag.gl;
 
-top_left: mag.Point,
 width: u32,
 height: u32,
 color: mag.Color,
 
-pub fn drawAbs(self: Self, win_width: u32, win_height: u32) void {
+pub fn drawAbs(self: Self, top_left: mag.Point, win_width: u32, win_height: u32) void {
     const wwf = @intToFloat(f32, win_width);
     const whf = @intToFloat(f32, win_height);
 
-    const xf = @intToFloat(f32, self.top_left.x);
-    const yf = @intToFloat(f32, self.top_left.y);
+    const xf = @intToFloat(f32, top_left.x);
+    const yf = @intToFloat(f32, top_left.y);
     const wf = @intToFloat(f32, self.width);
     const hf = @intToFloat(f32, self.height);
 

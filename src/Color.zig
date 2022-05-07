@@ -22,10 +22,9 @@ pub fn new(self: Self, app: *root.App) !mag.Node {
 
 pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) !void {
     const r = mag.Rect{
-        .top_left = mag.Point{ .x = x, .y = y },
         .width = width,
         .height = height,
         .color = self,
     };
-    r.drawAbs(app.win_width, app.win_height);
+    r.drawAbs(.{ .x = x, .y = y }, app.win_width, app.win_height);
 }

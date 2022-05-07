@@ -4,9 +4,12 @@ const gl = mag.gl;
 
 width: u32,
 height: u32,
-color: mag.Color,
+color: ?mag.Color,
 
 pub fn drawAbs(self: Self, top_left: mag.Point, win_width: u32, win_height: u32) void {
+    if (self.color == null) return;
+    const color = self.color.?;
+
     const wwf = @intToFloat(f32, win_width);
     const whf = @intToFloat(f32, win_height);
 
@@ -25,7 +28,7 @@ pub fn drawAbs(self: Self, top_left: mag.Point, win_width: u32, win_height: u32)
     pts -= @splat(8, @as(f32, 1));
 
     gl.draw(&.{
-        gl.vertexc(pts[0], -pts[1], self.color.r, self.color.g, self.color.b),
+        gl.vertexc(pts[0], -pts[1], color.r, color.g, color.b),
         gl.vertexp(pts[2], -pts[3]),
         gl.vertexp(pts[4], -pts[5]),
         gl.vertexp(pts[6], -pts[7]),

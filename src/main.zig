@@ -1,5 +1,6 @@
 const std = @import("std");
 const root = @import("root");
+const extras = @import("extras");
 
 pub const c = @import("./c.zig");
 pub const x11 = @import("./x11.zig");
@@ -15,12 +16,13 @@ pub const Row = @import("./Row.zig");
 
 pub fn App(comptime Elements: []const type) type {
     const Client = Elements[0];
-    const Builtins = &[_]type{
+    const Builtins = [_]type{
         StrictGrid,
         Row,
         Color,
+        Rect,
     };
-    const AllElements = Builtins ++ Elements;
+    const AllElements = &Builtins ++ Elements;
     return struct {
         display: x11.Display,
         visual: glx.Visual,

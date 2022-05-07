@@ -1,4 +1,5 @@
 const Self = @This();
+const root = @import("root");
 const mag = @import("./main.zig");
 const gl = mag.gl;
 
@@ -33,4 +34,18 @@ pub fn drawAbs(self: Self, top_left: mag.Point, win_width: u32, win_height: u32)
         gl.vertexp(pts[4], -pts[5]),
         gl.vertexp(pts[6], -pts[7]),
     });
+}
+
+pub fn new(app: *root.App, width: u32, height: u32, color: ?mag.Color) !mag.Node {
+    return try app.newNode(Self{ .width = width, .height = height, .color = color });
+}
+
+// Size is transparent, nothing to draw
+pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) !void {
+    _ = self;
+    _ = app;
+    _ = x;
+    _ = y;
+    _ = width;
+    _ = height;
 }

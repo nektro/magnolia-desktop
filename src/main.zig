@@ -206,5 +206,16 @@ pub fn App(comptime Elements: []const type) type {
             }
             unreachable;
         }
+
+        pub fn assertNodeType(self: Self, node: Node, comptime T: type) void {
+            const i = @enumToInt(node);
+            inline for (AllElements) |E, j| {
+                if (self.types.items[i] == j) {
+                    std.debug.assert(T == E);
+                    return;
+                }
+            }
+            unreachable;
+        }
     };
 }

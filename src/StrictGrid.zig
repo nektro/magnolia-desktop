@@ -6,7 +6,7 @@ const mag = @import("./main.zig");
 children: []const mag.Node,
 
 pub fn new(app: *root.App, children: []const mag.Node) !mag.Node {
-    // TODO assert .children are all Row
+    for (children) |item| app.assertNodeType(item, mag.Row);
     return try app.newNode(Self{ .children = try app.alloc.dupe(mag.Node, children) });
 }
 

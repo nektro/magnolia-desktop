@@ -49,3 +49,13 @@ pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) 
     _ = width;
     _ = height;
 }
+
+pub fn getWidth(self: Self, app: root.App) u32 {
+    _ = app;
+    return self.width;
+}
+
+pub fn getHeight(self: Self, app: root.App) u32 {
+    _ = app;
+    return self.height;
+}

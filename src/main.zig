@@ -13,12 +13,14 @@ pub const NodeItem = *anyopaque;
 pub const Node = enum(u32) { _ };
 pub const StrictGrid = @import("./StrictGrid.zig");
 pub const Row = @import("./Row.zig");
+pub const DynGrid = @import("./DynGrid.zig");
 
 pub fn App(comptime Elements: []const type) type {
     const Client = Elements[0];
     const Builtins = [_]type{
         StrictGrid,
         Row,
+        DynGrid,
         Color,
         Rect,
     };
@@ -198,7 +200,6 @@ pub fn App(comptime Elements: []const type) type {
             if (width == 0) return;
             if (height == 0) return;
             const i = @enumToInt(node);
-
             inline for (AllElements) |T, j| {
                 if (self.types.items[i] == j) {
                     const elem = extras.ptrCast(T, self.nodes.items[i]);
@@ -215,6 +216,31 @@ pub fn App(comptime Elements: []const type) type {
                 if (self.types.items[i] == j) {
                     std.debug.assert(T == E);
                     return;
+                }
+            }
+            unreachable;
+        }
+
+        pub fn castNodeAs(self: Self, node: Node, comptime T: type) *T {
+            self.assertNodeType(node, T);
+            return extras.ptrCast(T, self.nodes.items[@enumToInt(node)]);
+        }
+
+        pub fn getNodeWidth(self: Self, node: Node) u32 {
+            const i = @enumToInt(node);
+            inline for (AllElements) |T, j| {
+                if (T != Client and self.types.items[i] == j) {
+                    return extras.ptrCast(T, self.nodes.items[i]).getWidth(self);
+                }
+            }
+            unreachable;
+        }
+
+        pub fn getNodeHeight(self: Self, node: Node) u32 {
+            const i = @enumToInt(node);
+            inline for (AllElements) |T, j| {
+                if (T != Client and self.types.items[i] == j) {
+                    return extras.ptrCast(T, self.nodes.items[i]).getHeight(self);
                 }
             }
             unreachable;

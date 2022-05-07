@@ -28,3 +28,15 @@ pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) 
     };
     r.drawAbs(.{ .x = x, .y = y }, app.win_width, app.win_height);
 }
+
+pub fn getWidth(self: Self, app: root.App) u32 {
+    _ = app;
+    _ = self;
+    return 0;
+}
+
+pub fn getHeight(self: Self, app: root.App) u32 {
+    _ = app;
+    _ = self;
+    return 0;
+}

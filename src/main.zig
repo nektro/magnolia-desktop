@@ -77,7 +77,7 @@ pub fn App(comptime Elements: []const type) type {
             self.window.deinit();
             self.visual.deinit();
             self.display.deinit();
-            // TODO: free items in self.nodes
+            self.freeNodes();
             self.nodes.deinit(self.alloc);
             self.types.deinit(self.alloc);
         }
@@ -194,6 +194,19 @@ pub fn App(comptime Elements: []const type) type {
                 }
             }
             @compileError(@typeName(ET) ++ " not found in list of provided element types");
+        }
+
+        fn freeNodes(self: *Self) void {
+            while (self.nodes.popOrNull()) |rawptr| {
+                const i = self.types.pop();
+                inline for (AllElements) |T, j| {
+                    if (i == j) {
+                        const elem = extras.ptrCast(T, rawptr);
+                        elem.deinit(self.alloc);
+                        self.alloc.destroy(elem);
+                    }
+                }
+            }
         }
 
         pub fn drawNode(self: Self, node: Node, x: u32, y: u32, width: u32, height: u32) anyerror!void {

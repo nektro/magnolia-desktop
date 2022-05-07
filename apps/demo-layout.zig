@@ -7,7 +7,7 @@ pub const App = mag.App(&.{
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    // defer _ = gpa.deinit();
+    defer std.debug.assert(!gpa.deinit());
     const alloc = gpa.allocator();
 
     var app = try App.init(alloc, .{});

@@ -1,4 +1,5 @@
 const Self = @This();
+const std = @import("std");
 const root = @import("root");
 const mag = @import("./main.zig");
 const gl = mag.gl;
@@ -38,6 +39,11 @@ pub fn drawAbs(self: Self, top_left: mag.Point, win_width: u32, win_height: u32)
 
 pub fn new(app: *root.App, width: u32, height: u32, color: ?mag.Color) !mag.Node {
     return try app.newNode(Self{ .width = width, .height = height, .color = color });
+}
+
+pub fn deinit(self: Self, alloc: std.mem.Allocator) void {
+    _ = self;
+    _ = alloc;
 }
 
 // Size is transparent, nothing to draw

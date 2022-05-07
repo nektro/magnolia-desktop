@@ -20,6 +20,11 @@ pub fn new(self: Self, app: *root.App) !mag.Node {
     return try app.newNode(self);
 }
 
+pub fn deinit(self: Self, alloc: std.mem.Allocator) void {
+    _ = self;
+    _ = alloc;
+}
+
 pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) !void {
     const r = mag.Rect{
         .width = width,

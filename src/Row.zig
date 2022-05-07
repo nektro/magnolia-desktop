@@ -9,6 +9,10 @@ pub fn new(app: *root.App, children: []const mag.Node) !mag.Node {
     return try app.newNode(Self{ .children = try app.alloc.dupe(mag.Node, children) });
 }
 
+pub fn deinit(self: Self, alloc: std.mem.Allocator) void {
+    alloc.free(self.children);
+}
+
 pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) !void {
     const w = width / @intCast(u32, self.children.len);
     for (self.children) |item, i| {

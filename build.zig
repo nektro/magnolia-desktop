@@ -21,7 +21,6 @@ pub fn build(b: *std.build.Builder) void {
     addExe(b, target, mode, "demo-layout2", "apps/demo/layout2.zig");
 }
 
-// TODO: running -Dall -Drun doesnt do the expected
 fn addExe(b: *std.build.Builder, target: std.zig.CrossTarget, mode: std.builtin.Mode, comptime name: string, root_src: string) void {
     const exe = b.addExecutable("magnolia-" ++ name, root_src);
     exe.setTarget(target);

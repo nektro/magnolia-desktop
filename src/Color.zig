@@ -26,12 +26,13 @@ pub fn deinit(self: Self, alloc: std.mem.Allocator) void {
 }
 
 pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) !void {
+    _ = app;
     const r = mag.Rect{
         .width = width,
         .height = height,
         .color = self,
     };
-    r.drawAbs(.{ .x = x, .y = y }, app.win_width, app.win_height);
+    r.drawAbs(.{ .x = x, .y = y });
 }
 
 pub fn getWidth(self: Self, app: root.App) u32 {

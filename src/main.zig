@@ -93,6 +93,8 @@ pub fn App(comptime Elements: []const type) type {
             try self.window.show();
 
             c.glClearColor(0, 0, 0, 1);
+            c.glTranslatef(-1, 1, 0);
+            c.glScalef(2.0 / @intToFloat(f32, self.win_width), -2.0 / @intToFloat(f32, self.win_height), 0.0);
         }
 
         pub fn run(self: *Self) !void {
@@ -108,10 +110,12 @@ pub fn App(comptime Elements: []const type) type {
                 switch (@intToEnum(x11.EventType, ev.type)) {
                     .expose => {
                         const attribs = self.window.attributes();
-                        c.glViewport(0, 0, attribs.width, attribs.height);
-
                         const w = @intCast(u32, attribs.width);
                         const h = @intCast(u32, attribs.height);
+                        const dx = @intToFloat(f32, self.win_width) / @intToFloat(f32, w);
+                        const dy = @intToFloat(f32, self.win_height) / @intToFloat(f32, h);
+                        c.glViewport(0, 0, attribs.width, attribs.height);
+                        c.glScalef(dx, dy, 1);
 
                         self.win_width = w;
                         self.win_height = h;

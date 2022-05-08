@@ -31,7 +31,7 @@ const Client = struct {
         _ = app;
         _ = width;
         _ = height;
-        self.rect.drawAbs(.{ .x = x, .y = y }, app.win_width, app.win_height);
+        self.rect.drawAbs(.{ .x = x, .y = y });
     }
 
     pub fn handleResize(self: *Self, app: App) !void {

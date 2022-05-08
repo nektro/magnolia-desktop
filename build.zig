@@ -9,7 +9,7 @@ pub fn build(b: *std.build.Builder) void {
 
     const mode = b.standardReleaseOptions();
 
-    doall = b.option(bool, "all", "Build all apps, default only selected steps") orelse (mode == .Debug);
+    doall = b.option(bool, "all", "Build all apps, default only selected steps") orelse false;
 
     addExe(b, target, mode, "triangle", "apps/triangle.zig");
     addExe(b, target, mode, "demo-centersquare", "apps/demo-centersquare.zig");

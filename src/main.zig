@@ -264,3 +264,36 @@ pub fn App(comptime Elements: []const type) type {
         }
     };
 }
+
+fn FieldsTuple(comptime T: type) type {
+    const fields: []const std.builtin.Type.StructField = std.meta.fields(T);
+    var types: [fields.len]type = undefined;
+    for (fields) |item, i| {
+        types[i] = item.field_type;
+    }
+    return std.meta.Tuple(&types);
+}
+
+pub fn MixinNodeInit(comptime T: type) type {
+    return struct {
+        pub fn new(app: *root.App, args: FieldsTuple(T)) std.mem.Allocator.Error!Node {
+            var t: T = undefined;
+            inline for (std.meta.fields(T)) |item, i| {
+                const direct = args[i];
+                const F = item.field_type;
+                const item_is_slice = comptime std.meta.trait.isSlice(F);
+                const value = if (item_is_slice) try app.alloc.dupe(std.meta.Child(F), direct) else direct;
+                @field(t, item.name) = value;
+            }
+            return try app.newNode(t);
+        }
+
+        pub fn deinit(self: T, alloc: std.mem.Allocator) void {
+            inline for (std.meta.fields(T)) |item| {
+                if (comptime std.meta.trait.isSlice(item.field_type)) {
+                    alloc.free(@field(self, item.name));
+                }
+            }
+        }
+    };
+}

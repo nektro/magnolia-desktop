@@ -8,13 +8,7 @@ rows: u16,
 cols: u16,
 children: []const mag.Node,
 
-pub fn new(app: *root.App, rows: u16, cols: u16, children: []const mag.Node) !mag.Node {
-    return try app.newNode(Self{ .rows = rows, .cols = cols, .children = try app.alloc.dupe(mag.Node, children) });
-}
-
-pub fn deinit(self: Self, alloc: std.mem.Allocator) void {
-    alloc.free(self.children);
-}
+usingnamespace mag.MixinNodeInit(Self);
 
 pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) !void {
     _ = width;

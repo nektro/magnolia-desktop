@@ -35,10 +35,12 @@ pub fn App(comptime Elements: []const type) type {
         center: Point,
         active: bool,
         alloc: std.mem.Allocator,
-        nodes: std.ArrayListUnmanaged(NodeItem),
-        types: std.ArrayListUnmanaged(u32),
+        nodes: std.AutoHashMapUnmanaged(Node, NodeItem),
+        types: std.AutoHashMapUnmanaged(Node, u32),
 
         const Self = @This();
+
+        var nextId: u32 = 0;
 
         pub fn init(alloc: std.mem.Allocator, client: Client) !Self {
             // Open the display
@@ -189,20 +191,23 @@ pub fn App(comptime Elements: []const type) type {
             const ET = @TypeOf(element);
             inline for (AllElements) |IT, i| {
                 if (ET == IT) {
-                    const r = self.nodes.items.len;
+                    const r = @intToEnum(Node, nextId);
+                    defer nextId += 1;
                     const t = try self.alloc.create(IT);
                     t.* = element;
-                    try self.nodes.append(self.alloc, t);
-                    try self.types.append(self.alloc, i);
-                    return @intToEnum(Node, r);
+                    try self.nodes.put(self.alloc, r, t);
+                    try self.types.put(self.alloc, r, i);
+                    return r;
                 }
             }
             @compileError(@typeName(ET) ++ " not found in list of provided element types");
         }
 
         fn freeNodes(self: *Self) void {
-            while (self.nodes.popOrNull()) |rawptr| {
-                const i = self.types.pop();
+            var it = self.nodes.keyIterator();
+            while (it.next()) |node| {
+                const rawptr = self.nodes.get(node.*).?;
+                const i = self.types.get(node.*).?;
                 inline for (AllElements) |T, j| {
                     if (i == j) {
                         const elem = extras.ptrCast(T, rawptr);
@@ -216,10 +221,9 @@ pub fn App(comptime Elements: []const type) type {
         pub fn drawNode(self: Self, node: Node, x: u32, y: u32, width: u32, height: u32) anyerror!void {
             if (width == 0) return;
             if (height == 0) return;
-            const i = @enumToInt(node);
             inline for (AllElements) |T, j| {
-                if (self.types.items[i] == j) {
-                    const elem = extras.ptrCast(T, self.nodes.items[i]);
+                if (self.types.get(node).? == j) {
+                    const elem = extras.ptrCast(T, self.nodes.get(node).?);
                     try elem.draw(self, x, y, width, height);
                     return;
                 }
@@ -228,9 +232,8 @@ pub fn App(comptime Elements: []const type) type {
         }
 
         pub fn assertNodeType(self: Self, node: Node, comptime T: type) void {
-            const i = @enumToInt(node);
             inline for (AllElements) |E, j| {
-                if (self.types.items[i] == j) {
+                if (self.types.get(node).? == j) {
                     std.debug.assert(T == E);
                     return;
                 }
@@ -244,20 +247,18 @@ pub fn App(comptime Elements: []const type) type {
         }
 
         pub fn getNodeWidth(self: Self, node: Node) u32 {
-            const i = @enumToInt(node);
             inline for (AllElements) |T, j| {
-                if (self.types.items[i] == j) {
-                    return extras.ptrCast(T, self.nodes.items[i]).getWidth(self);
+                if (self.types.get(node).? == j) {
+                    return extras.ptrCast(T, self.nodes.get(node).?).getWidth(self);
                 }
             }
             unreachable;
         }
 
         pub fn getNodeHeight(self: Self, node: Node) u32 {
-            const i = @enumToInt(node);
             inline for (AllElements) |T, j| {
-                if (self.types.items[i] == j) {
-                    return extras.ptrCast(T, self.nodes.items[i]).getHeight(self);
+                if (self.types.get(node).? == j) {
+                    return extras.ptrCast(T, self.nodes.get(node).?).getHeight(self);
                 }
             }
             unreachable;

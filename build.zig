@@ -4,6 +4,7 @@ const deps = @import("./deps.zig");
 
 var doall: bool = false;
 var dorun: bool = false;
+var strip: bool = false;
 
 pub fn build(b: *std.build.Builder) void {
     const target = b.standardTargetOptions(.{});
@@ -12,6 +13,7 @@ pub fn build(b: *std.build.Builder) void {
 
     doall = b.option(bool, "all", "Build all apps, default only selected steps") orelse false;
     dorun = b.option(bool, "run", "Run the app too") orelse false;
+    strip = b.option(bool, "strip", "Strip debug symbols") orelse false;
 
     addExe(b, target, mode, "triangle", "apps/triangle.zig");
     addExe(b, target, mode, "demo-centersquare", "apps/demo-centersquare.zig");
@@ -27,6 +29,7 @@ fn addExe(b: *std.build.Builder, target: std.zig.CrossTarget, mode: std.builtin.
     exe.setBuildMode(mode);
     deps.addAllTo(exe);
 
+    if (strip) exe.strip = true;
     const install_step = &b.addInstallArtifact(exe).step;
     if (doall) b.getInstallStep().dependOn(install_step);
 

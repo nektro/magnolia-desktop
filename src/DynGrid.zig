@@ -53,13 +53,17 @@ fn getMaxHeight(self: Self, app: root.App, row: u16) u32 {
 }
 
 pub fn getWidth(self: Self, app: root.App) u32 {
-    _ = self;
-    _ = app;
-    std.debug.todo("DynGrid.getWidth");
+    var ret: u32 = 0;
+    for (range(self.cols)) |_, c| {
+        ret = std.math.max(ret, self.getMaxWidth(app, @intCast(u16, c)));
+    }
+    return ret;
 }
 
 pub fn getHeight(self: Self, app: root.App) u32 {
-    _ = self;
-    _ = app;
-    std.debug.todo("DynGrid.getHeight");
+    var ret: u32 = 0;
+    for (range(self.rows)) |_, r| {
+        ret = std.math.max(ret, self.getMaxHeight(app, @intCast(u16, r)));
+    }
+    return ret;
 }

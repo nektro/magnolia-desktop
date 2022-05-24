@@ -18,13 +18,13 @@ pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) 
     var dx = x;
     for (range(self.cols)) |_, c| {
         const cc = @intCast(u16, c);
-        const w = if (cc == self.cols - 1) (width - dx) else self.getMaxWidth(app, cc);
+        const w = if (cc == self.cols - 1) width else self.getMaxWidth(app, cc);
         defer dx += w;
 
         var dy = y;
         for (range(self.rows)) |_, r| {
             const rr = @intCast(u16, r);
-            const h = if (rr == self.rows - 1) (height - dy) else self.getMaxHeight(app, rr);
+            const h = if (rr == self.rows - 1) height else self.getMaxHeight(app, rr);
             defer dy += h;
 
             try app.drawNode(self.child(cc, rr), dx, dy, w, h);

@@ -20,7 +20,7 @@ pub fn build(b: *std.build.Builder) void {
     addExe(b, target, mode, "demo-focusblur", "apps/demo-focusblur.zig");
     addExe(b, target, mode, "triangle-raw", "apps/triangle-raw.zig"); // temp for debugging
     addExe(b, target, mode, "demo-layout", "apps/demo-layout.zig");
-    addExe(b, target, mode, "demo-layout2", "apps/demo/layout2.zig");
+    addExe(b, target, mode, "demo-layout2", "apps/demo-layout2.zig");
     addExe(b, target, mode, "demo-margin", "apps/demo-margin.zig");
 }
 

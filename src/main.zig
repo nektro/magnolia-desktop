@@ -224,20 +224,31 @@ pub fn App(comptime Elements: []const type) type {
             inline for (AllElements) |T, j| {
                 if (self.types.get(node).? == j) {
                     const elem = extras.ptrCast(T, self.nodes.get(node).?);
+                    const margin = elem.style.calcMargin();
 
+                    const t = margin.top;
+                    const l = margin.left;
+                    const b = margin.bottom;
+                    const r = margin.right;
                     Rect.drawAbs(
                         .{
-                            .width = width,
-                            .height = height,
+                            .width = width - margin.left - margin.right,
+                            .height = height - margin.top - margin.bottom,
                             .style = .{},
                         },
                         .{
-                            .x = x,
-                            .y = y,
+                            .x = x + margin.top,
+                            .y = y + margin.left,
                         },
                         elem.style.bgcolor,
                     );
-                    try elem.draw(self, x, y, width, height);
+                    try elem.draw(
+                        self,
+                        x + t,
+                        y + l,
+                        width - l - r,
+                        height - t - b,
+                    );
                     return;
                 }
             }

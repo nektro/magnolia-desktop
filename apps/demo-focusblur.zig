@@ -15,10 +15,9 @@ const Client = struct {
     pub fn init() !Self {
         return Self{
             .rect = .{
-                // .top_left = .{ .x = 0, .y = 0 },
                 .width = 0,
                 .height = 0,
-                .color = .{ .r = 0, .g = 1, .b = 0 },
+                .style = .{ .bgcolor = .{ .r = 1, .g = 1, .b = 1 } },
             },
         };
     }
@@ -31,7 +30,7 @@ const Client = struct {
         _ = app;
         _ = width;
         _ = height;
-        self.rect.drawAbs(.{ .x = x, .y = y });
+        self.rect.drawAbs(.{ .x = x, .y = y }, self.rect.style.bgcolor);
     }
 
     pub fn handleResize(self: *Self, app: App) !void {
@@ -40,13 +39,13 @@ const Client = struct {
     }
 
     pub fn handleEnter(self: *Self, app: App) !void {
-        self.rect.color = mag.Color.parseConst("#2ECC71");
+        self.rect.style.bgcolor = mag.Color.parseConst("#2ECC71");
 
         try app.draw();
     }
 
     pub fn handleLeave(self: *Self, app: App) !void {
-        self.rect.color = mag.Color.parseConst("#E74C3C");
+        self.rect.style.bgcolor = mag.Color.parseConst("#E74C3C");
 
         try app.draw();
     }

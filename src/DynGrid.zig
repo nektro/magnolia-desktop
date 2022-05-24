@@ -6,6 +6,7 @@ const range = @import("range").range;
 
 rows: u16,
 cols: u16,
+style: mag.style.ForNode,
 children: []const mag.Node,
 
 usingnamespace mag.MixinNodeInit(Self);

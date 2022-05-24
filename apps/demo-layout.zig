@@ -24,15 +24,15 @@ const Client = struct {
     child: ?mag.Node = null,
 
     pub fn postinit(self: *Client, app: *App) !void {
-        self.child = try mag.StrictGrid.new(app, &.{
-            try mag.Row.new(app, .{&.{
-                try mag.Color.parseConst("#27AE60").new(app),
-                try mag.Color.parseConst("#2980B9").new(app),
-            }}),
-            try mag.Row.new(app, .{&.{
-                try mag.Color.parseConst("#E67E22").new(app),
-                try mag.Color.parseConst("#E74C3C").new(app),
-            }}),
+        self.child = try mag.StrictGrid.new(app, .{}, &.{
+            try mag.Row.new(app, .{ .{}, &.{
+                try mag.Rect.new(app, .{ 0, 0, .{ .bgcolor = mag.Color.parseConst("#27AE60") } }),
+                try mag.Rect.new(app, .{ 0, 0, .{ .bgcolor = mag.Color.parseConst("#2980B9") } }),
+            } }),
+            try mag.Row.new(app, .{ .{}, &.{
+                try mag.Rect.new(app, .{ 0, 0, .{ .bgcolor = mag.Color.parseConst("#E67E22") } }),
+                try mag.Rect.new(app, .{ 0, 0, .{ .bgcolor = mag.Color.parseConst("#E74C3C") } }),
+            } }),
         });
     }
 

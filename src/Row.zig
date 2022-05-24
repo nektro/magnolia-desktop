@@ -3,6 +3,7 @@ const std = @import("std");
 const root = @import("root");
 const mag = @import("./main.zig");
 
+style: mag.style.ForNode,
 children: []const mag.Node,
 
 usingnamespace mag.MixinNodeInit(Self);

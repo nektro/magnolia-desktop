@@ -6,11 +6,10 @@ const gl = mag.gl;
 
 width: u32,
 height: u32,
-color: ?mag.Color,
+style: mag.style.ForNode,
 
-pub fn drawAbs(self: Self, top_left: mag.Point) void {
-    if (self.color == null) return;
-    const color = self.color.?;
+pub fn drawAbs(self: Self, top_left: mag.Point, color: ?mag.Color) void {
+    if (color == null) return;
 
     const xf = @intToFloat(f32, top_left.x);
     const yf = @intToFloat(f32, top_left.y);
@@ -23,7 +22,7 @@ pub fn drawAbs(self: Self, top_left: mag.Point) void {
     const y2 = yf + hf;
 
     gl.draw(&.{
-        gl.vertexc(x1, y1, color.r, color.g, color.b),
+        gl.vertexc(x1, y1, color.?.r, color.?.g, color.?.b),
         gl.vertexp(x2, y1),
         gl.vertexp(x2, y2),
         gl.vertexp(x1, y2),
@@ -32,14 +31,12 @@ pub fn drawAbs(self: Self, top_left: mag.Point) void {
 
 usingnamespace mag.MixinNodeInit(Self);
 
-// Size is transparent, nothing to draw
 pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) !void {
-    _ = self;
     _ = app;
-    _ = x;
-    _ = y;
-    _ = width;
-    _ = height;
+    var copy = self;
+    if (copy.width == 0) copy.width = width;
+    if (copy.height == 0) copy.height = height;
+    drawAbs(copy, .{ .x = x, .y = y }, null);
 }
 
 pub fn getWidth(self: Self, app: root.App) u32 {

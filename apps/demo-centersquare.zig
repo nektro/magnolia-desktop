@@ -16,7 +16,7 @@ const Client = struct {
             .rect = .{
                 .width = 150,
                 .height = 150,
-                .color = .{ .r = 1, .g = 0, .b = 0 },
+                .style = .{ .bgcolor = .{ .r = 1, .g = 0, .b = 0 } },
             },
         };
     }
@@ -31,7 +31,7 @@ const Client = struct {
         _ = y;
         _ = width;
         _ = height;
-        self.rect.drawAbs(self.top_left);
+        self.rect.drawAbs(self.top_left, self.rect.style.bgcolor);
     }
 
     pub fn handleResize(self: *Self, app: App) !void {

@@ -15,34 +15,3 @@ pub fn parseConst(comptime inp: *const [7:0]u8) Self {
         .b = comptime @intToFloat(f32, std.fmt.parseInt(u8, inp[5..7], 16) catch unreachable) / 255.0,
     };
 }
-
-pub fn new(self: Self, app: *root.App) !mag.Node {
-    return try app.newNode(self);
-}
-
-pub fn deinit(self: Self, alloc: std.mem.Allocator) void {
-    _ = self;
-    _ = alloc;
-}
-
-pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) !void {
-    _ = app;
-    const r = mag.Rect{
-        .width = width,
-        .height = height,
-        .color = self,
-    };
-    r.drawAbs(.{ .x = x, .y = y });
-}
-
-pub fn getWidth(self: Self, app: root.App) u32 {
-    _ = app;
-    _ = self;
-    return 0;
-}
-
-pub fn getHeight(self: Self, app: root.App) u32 {
-    _ = app;
-    _ = self;
-    return 0;
-}

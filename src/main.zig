@@ -6,6 +6,7 @@ pub const c = @import("./c.zig");
 pub const x11 = @import("./x11.zig");
 pub const glx = @import("./glx.zig");
 pub const gl = @import("./gl.zig");
+pub const style = @import("./style.zig");
 pub const Point = @import("./Point.zig");
 pub const Color = @import("./Color.zig");
 pub const Rect = @import("./Rect.zig");
@@ -21,7 +22,6 @@ pub fn App(comptime Elements: []const type) type {
         StrictGrid,
         Row,
         DynGrid,
-        Color,
         Rect,
     };
     const AllElements = &Builtins ++ Elements[1..];
@@ -224,6 +224,19 @@ pub fn App(comptime Elements: []const type) type {
             inline for (AllElements) |T, j| {
                 if (self.types.get(node).? == j) {
                     const elem = extras.ptrCast(T, self.nodes.get(node).?);
+
+                    Rect.drawAbs(
+                        .{
+                            .width = width,
+                            .height = height,
+                            .style = .{},
+                        },
+                        .{
+                            .x = x,
+                            .y = y,
+                        },
+                        elem.style.bgcolor,
+                    );
                     try elem.draw(self, x, y, width, height);
                     return;
                 }

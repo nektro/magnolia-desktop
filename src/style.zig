@@ -3,8 +3,7 @@ const mag = @import("./main.zig");
 
 pub const ForNode = struct {
     margin: u32 = 0,
-    vmargin: u32 = 0,
-    hmargin: u32 = 0,
+    vhmargin: [2]u32 = .{ 0, 0 },
     tmargin: u32 = 0,
     bmargin: u32 = 0,
     lmargin: u32 = 0,
@@ -14,10 +13,10 @@ pub const ForNode = struct {
 
     pub fn calcMargin(self: ForNode) Box {
         return .{
-            .top = o(self.tmargin) orelse o(self.vmargin) orelse o(self.margin) orelse 0,
-            .bottom = o(self.bmargin) orelse o(self.vmargin) orelse o(self.margin) orelse 0,
-            .left = o(self.lmargin) orelse o(self.hmargin) orelse o(self.margin) orelse 0,
-            .right = o(self.rmargin) orelse o(self.hmargin) orelse o(self.margin) orelse 0,
+            .top = o(self.tmargin) orelse o(self.vhmargin[0]) orelse o(self.margin) orelse 0,
+            .bottom = o(self.bmargin) orelse o(self.vhmargin[0]) orelse o(self.margin) orelse 0,
+            .left = o(self.lmargin) orelse o(self.vhmargin[1]) orelse o(self.margin) orelse 0,
+            .right = o(self.rmargin) orelse o(self.vhmargin[1]) orelse o(self.margin) orelse 0,
         };
     }
 };

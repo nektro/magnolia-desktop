@@ -15,3 +15,29 @@ As far as problem space you can consider this project as an alternative to a mix
 Source-Available, All rights reserved. (c) 2022 Meghan Denny
 
 [Cozette](https://github.com/slavfox/Cozette) font, MIT. (c) 2020 Slavfox
+
+## Building
+
+Magnolia is built using the Zig build system. To see all available build options run `zig build --help`.
+
+If building on NixOS, there is a `shell.nix` which will enable all the system dependencies needed.
+
+Pull in the Zig dependencies by running `zigmod ci`.
+
+### Options
+- `-Dtarget=[string]            The CPU architecture, OS, and ABI to build for`
+- `-Dcpu=[string]               Target CPU features to add or subtract`
+- `-Drelease-safe=[bool]        Optimizations on and safety on`
+- `-Drelease-fast=[bool]        Optimizations on and safety off`
+- `-Drelease-small=[bool]       Size optimizations on and safety off`
+- `-Dall=[bool]                 Build all apps, default only selected steps`
+- `-Drun=[bool]                 Run the app too`
+- `-Dstrip=[bool]               Strip debug symbols`
+
+### Available Steps
+- `triangle`
+- `demo-centersquare`
+- `demo-focusblur`
+- `demo-layout`
+- `demo-layout2`
+- `demo-margin`

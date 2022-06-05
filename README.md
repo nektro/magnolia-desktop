@@ -9,3 +9,9 @@ The only additional build dependencies are [Git](https://git-scm.com/), [Zig](ht
 > Note: this project is a WIP and still in a very experimental state. Stay tuned for more updates.
 
 As far as problem space you can consider this project as an alternative to a mix of GTK/KDE/QT and GNOME/Plasma depending on which part of the code you're using.
+
+## License
+
+Source-Available, All rights reserved. (c) 2022 Meghan Denny
+
+[Cozette](https://github.com/slavfox/Cozette) font, MIT. (c) 2020 Slavfox

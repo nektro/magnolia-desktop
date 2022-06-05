@@ -84,7 +84,7 @@ pub fn App(comptime Elements: []const type) type {
             self.types.deinit(self.alloc);
         }
 
-        pub fn start(self: Self) !void {
+        pub fn start(self: Self, bg: Color) !void {
             std.log.debug("GL Vendor: {s}", .{gl.String.vendor.get()});
             std.log.debug("GL Renderer: {s}", .{gl.String.renderer.get()});
             std.log.debug("GL Version: {s}", .{gl.String.version.get()});
@@ -94,7 +94,7 @@ pub fn App(comptime Elements: []const type) type {
 
             try self.window.show();
 
-            c.glClearColor(0, 0, 0, 1);
+            c.glClearColor(bg.r, bg.g, bg.b, 1);
             c.glTranslatef(-1, 1, 0);
             c.glScalef(2.0 / @intToFloat(f32, self.win_width), -2.0 / @intToFloat(f32, self.win_height), 0.0);
         }

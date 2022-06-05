@@ -15,7 +15,7 @@ pub fn main() !void {
 
     try app.client.postinit(&app);
 
-    try app.start();
+    try app.start(mag.Color.parseConst("#000000"));
     try app.draw();
     try app.run();
 }

@@ -9,7 +9,7 @@ pub fn main() !void {
     var app = try App.init(undefined, .{});
     defer app.deinit();
 
-    try app.start();
+    try app.start(mag.Color.parseConst("#000000"));
 
     draw(app);
 

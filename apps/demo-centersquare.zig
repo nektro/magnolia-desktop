@@ -10,7 +10,7 @@ const Client = struct {
 
     const Self = @This();
 
-    pub fn init() !Self {
+    pub fn init() Self {
         return Self{
             .top_left = .{ .x = 0, .y = 0 },
             .rect = .{
@@ -19,10 +19,6 @@ const Client = struct {
                 .style = .{ .bgcolor = .{ .r = 1, .g = 0, .b = 0 } },
             },
         };
-    }
-
-    pub fn deinit(self: Self) void {
-        _ = self;
     }
 
     pub fn draw(self: Self, app: App, x: u32, y: u32, width: u32, height: u32) error{}!void {
@@ -41,10 +37,7 @@ const Client = struct {
 };
 
 pub fn main() !void {
-    var client = try Client.init();
-    defer client.deinit();
-
-    var app = try App.init(undefined, client);
+    var app = try App.init(undefined, Client.init());
     defer app.deinit();
 
     try app.start();

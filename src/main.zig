@@ -290,18 +290,9 @@ pub fn App(comptime Elements: []const type) type {
     };
 }
 
-fn FieldsTuple(comptime T: type) type {
-    const fields: []const std.builtin.Type.StructField = std.meta.fields(T);
-    var types: [fields.len]type = undefined;
-    for (fields) |item, i| {
-        types[i] = item.field_type;
-    }
-    return std.meta.Tuple(&types);
-}
-
 pub fn MixinNodeInit(comptime T: type) type {
     return struct {
-        pub fn new(app: *root.App, args: FieldsTuple(T)) std.mem.Allocator.Error!Node {
+        pub fn new(app: *root.App, args: extras.FieldsTuple(T)) std.mem.Allocator.Error!Node {
             var t: T = undefined;
             inline for (std.meta.fields(T)) |item, i| {
                 const direct = args[i];

@@ -7,6 +7,8 @@ pub const x11 = @import("./x11.zig");
 pub const glx = @import("./glx.zig");
 pub const gl = @import("./gl.zig");
 pub const style = @import("./style.zig");
+pub const bdf = @import("./bdf.zig");
+
 pub const Point = @import("./Point.zig");
 pub const Color = @import("./Color.zig");
 pub const Rect = @import("./Rect.zig");
@@ -313,3 +315,6 @@ pub fn MixinNodeInit(comptime T: type) type {
         }
     };
 }
+
+// TODO make this a union when we support more formats
+pub const Font = bdf.Font;

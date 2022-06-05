@@ -22,6 +22,7 @@ pub fn build(b: *std.build.Builder) void {
     addExe(b, target, mode, "demo-layout", "apps/demo-layout.zig");
     addExe(b, target, mode, "demo-layout2", "apps/demo-layout2.zig");
     addExe(b, target, mode, "demo-margin", "apps/demo-margin.zig");
+    addExe(b, target, mode, "demo-text", "apps/demo-text.zig");
 }
 
 fn addExe(b: *std.build.Builder, target: std.zig.CrossTarget, mode: std.builtin.Mode, comptime name: string, root_src: string) void {

@@ -86,6 +86,7 @@ pub fn App(comptime Elements: []const type) type {
             self.freeNodes();
             self.nodes.deinit(self.alloc);
             self.types.deinit(self.alloc);
+            if (@hasDecl(Client, "deinit")) self.client.deinit(self.alloc);
         }
 
         pub fn start(self: Self, bg: Color) !void {

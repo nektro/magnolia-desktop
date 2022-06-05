@@ -24,9 +24,9 @@ pub fn App(comptime Elements: []const type) type {
     const Builtins = [_]type{
         StrictGrid,
         Row,
+        TextLine,
         DynGrid,
         Rect,
-        TextLine,
     };
     const AllElements = &Builtins ++ Elements[1..];
     return struct {

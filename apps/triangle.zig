@@ -29,8 +29,8 @@ const Client = struct {
 
 fn draw(app: App) void {
     _ = app;
-    const w = @intToFloat(f32, app.win_width);
-    const h = @intToFloat(f32, app.win_height);
+    const w = app.win_width;
+    const h = app.win_height;
     gl.draw(&.{
         gl.vertexc(0, h, 1, 0, 0),
         gl.vertexc(w / 2, 0, 0, 1, 0),

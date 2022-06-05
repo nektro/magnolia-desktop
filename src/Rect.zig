@@ -11,10 +11,10 @@ style: mag.style.ForNode,
 pub fn drawAbs(self: Self, top_left: mag.Point, color: ?mag.Color) void {
     if (color == null) return;
 
-    const xf = @intToFloat(f32, top_left.x);
-    const yf = @intToFloat(f32, top_left.y);
-    const wf = @intToFloat(f32, self.width);
-    const hf = @intToFloat(f32, self.height);
+    const xf = top_left.x;
+    const yf = top_left.y;
+    const wf = self.width;
+    const hf = self.height;
 
     const x1 = xf;
     const y1 = yf;

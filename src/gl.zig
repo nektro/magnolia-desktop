@@ -38,8 +38,8 @@ fn color3(r: f32, g: f32, b: f32) void {
     return color4(r, g, b, 1);
 }
 
-fn vertex2(x: f32, y: f32) void {
-    c.glVertex3f(x, y, 0);
+fn vertex2(x: u32, y: u32) void {
+    c.glVertex3i(@intCast(c_int, x), @intCast(c_int, y), 0);
 }
 
 pub fn clear(
@@ -53,8 +53,8 @@ pub fn clear(
 }
 
 pub const Point = struct {
-    x: f32,
-    y: f32,
+    x: u32,
+    y: u32,
 };
 
 pub const Path = struct {
@@ -87,14 +87,14 @@ pub fn draw(items: []const Path.Item) void {
     return drawRaw(.POLYGON, items);
 }
 
-pub fn vertexc(x: f32, y: f32, r: f32, g: f32, b: f32) Path.Item {
+pub fn vertexc(x: u32, y: u32, r: f32, g: f32, b: f32) Path.Item {
     return Path.Item{ .vertexc = .{
         .{ .x = x, .y = y },
         .{ .r = r, .g = g, .b = b },
     } };
 }
 
-pub fn vertexp(x: f32, y: f32) Path.Item {
+pub fn vertexp(x: u32, y: u32) Path.Item {
     return Path.Item{ .vertexp = .{
         .{ .x = x, .y = y },
     } };

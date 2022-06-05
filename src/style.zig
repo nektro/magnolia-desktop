@@ -1,5 +1,6 @@
 const std = @import("std");
 const mag = @import("./main.zig");
+const extras = @import("extras");
 
 pub const ForNode = struct {
     margin: u32 = 0,
@@ -8,8 +9,9 @@ pub const ForNode = struct {
     bmargin: u32 = 0,
     lmargin: u32 = 0,
     rmargin: u32 = 0,
-
     bgcolor: ?mag.Color = null,
+
+    font: ?*mag.Font = null,
 
     pub fn calcMargin(self: ForNode) Box {
         return .{
@@ -18,6 +20,18 @@ pub const ForNode = struct {
             .left = o(self.lmargin) orelse o(self.vhmargin[1]) orelse o(self.margin) orelse 0,
             .right = o(self.rmargin) orelse o(self.vhmargin[1]) orelse o(self.margin) orelse 0,
         };
+    }
+
+    pub fn merge(self: *ForNode, with: ForNode) void {
+        const cascading_styles = [_]std.meta.FieldEnum(ForNode){
+            .font,
+        };
+        inline for (cascading_styles) |sty| {
+            const field = std.meta.fieldInfo(ForNode, sty);
+            if (@field(self, @tagName(sty)) == extras.ptrCastConst(field.field_type, field.default_value.?).*) {
+                @field(self, @tagName(sty)) = @field(with, @tagName(sty));
+            }
+        }
     }
 };
 

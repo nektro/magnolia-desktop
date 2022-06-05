@@ -292,6 +292,27 @@ pub fn App(comptime Elements: []const type) type {
             }
             unreachable;
         }
+
+        pub fn cascadeNodeStyles(self: *Self, parent_styles: ?style.ForNode, node: Node) void {
+            const parent = parent_styles orelse style.ForNode{};
+
+            inline for (AllElements) |T, j| {
+                if (self.types.get(node).? == j) {
+                    const entry = self.nodes.getEntry(node).?;
+                    var element = extras.ptrCast(T, entry.value_ptr.*);
+                    element.style.merge(parent);
+                    entry.value_ptr.* = element;
+
+                    if (@hasField(T, "children")) {
+                        for (element.children) |child| {
+                            self.cascadeNodeStyles(element.style, child);
+                        }
+                    }
+                    return;
+                }
+            }
+            unreachable;
+        }
     };
 }
 

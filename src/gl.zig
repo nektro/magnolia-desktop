@@ -34,7 +34,7 @@ fn color4(r: f32, g: f32, b: f32, a: f32) void {
     c.glColor4f(r, g, b, a);
 }
 
-fn color3(r: f32, g: f32, b: f32) void {
+pub fn color3(r: f32, g: f32, b: f32) void {
     return color4(r, g, b, 1);
 }
 
@@ -102,4 +102,8 @@ pub fn vertexp(x: u32, y: u32) Path.Item {
 
 pub fn commitFrame(xwindow: x11.Window) void {
     c.glXSwapBuffers(xwindow.display, xwindow.window);
+}
+
+pub fn drawPoints(items: []const Path.Item) void {
+    return drawRaw(.POINTS, items);
 }

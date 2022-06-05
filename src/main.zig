@@ -17,6 +17,7 @@ pub const Node = enum(u32) { _ };
 pub const StrictGrid = @import("./StrictGrid.zig");
 pub const Row = @import("./Row.zig");
 pub const DynGrid = @import("./DynGrid.zig");
+pub const TextLine = @import("./TextLine.zig");
 
 pub fn App(comptime Elements: []const type) type {
     const Client = Elements[0];
@@ -25,6 +26,7 @@ pub fn App(comptime Elements: []const type) type {
         Row,
         DynGrid,
         Rect,
+        TextLine,
     };
     const AllElements = &Builtins ++ Elements[1..];
     return struct {

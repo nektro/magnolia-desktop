@@ -24,11 +24,11 @@ pub fn App(comptime Elements: []const type) type {
     const Builtins = [_]type{
         StrictGrid,
         Row,
-        TextLine,
         DynGrid,
+        TextLine,
         Rect,
     };
-    const AllElements = &Builtins ++ Elements[1..];
+    const AllElements = Builtins ++ Elements[1..];
     return struct {
         display: x11.Display,
         visual: glx.Visual,

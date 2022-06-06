@@ -84,6 +84,7 @@ games
     document
     table
     presentation
+    music sequencer  (.midi maker)
 
 linux distro stuff
     package manager

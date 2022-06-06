@@ -179,8 +179,8 @@ pub fn App(comptime Elements: []const type) type {
                     .motion_notify => {
                         if (!self.active) continue;
                     },
-                    else => {
-                        std.log.info("unrecognized event: {d}", .{ev.type});
+                    else => |v| {
+                        std.log.info("unrecognized event: {s}", .{@tagName(v)});
                     },
                 }
             }

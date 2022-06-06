@@ -57,20 +57,8 @@ pub const Font = struct {
         self.chars.deinit(alloc);
     }
 
-    pub fn drawChar(self: Font, cp: u16, comptime scale: u8) [16 * scale][16 * scale]bool {
-        const char = self.chars.get(cp) orelse self.chars.get(0).?;
-        var res = std.mem.zeroes([16 * scale][16 * scale]bool);
-
-        for (res) |col, y| {
-            for (col) |_, x| {
-                const ry = y / scale;
-                const rx = x / scale;
-
-                if (ry >= char.bits.len) continue;
-                res[y][x] = char.bits[ry].isSet(16 - 1 - rx);
-            }
-        }
-        return res;
+    pub fn getChar(self: Font, cp: u16) Char {
+        return self.chars.get(cp) orelse self.chars.get(0).?;
     }
 };
 
@@ -90,8 +78,7 @@ pub const Char = struct {
     height: u8,
     ll_x: i8,
     ll_y: i8,
-    // TODO assumes font has a width of 16
-    bits: []const std.StaticBitSet(16),
+    bits: []const bool,
 };
 
 pub fn parse(alloc: std.mem.Allocator, path: string) !Font {
@@ -249,23 +236,44 @@ fn parseChar(r: anytype, alloc: std.mem.Allocator) !?Char {
     const dwidthy = try readInt(r, alloc, u16);
 
     try assertWord(r, alloc, "BBX");
-    const w = try readInt(r, alloc, u8);
+    const w = (try readInt(r, alloc, u8)) + 1;
     const h = try readInt(r, alloc, u8);
     const ll_x = try readInt(r, alloc, i8);
     const ll_y = try readInt(r, alloc, i8);
 
-    // TODO assumes font has a width of 16
     try assertLine(r, alloc, "BITMAP");
-    var bits = std.ArrayListUnmanaged(std.StaticBitSet(16)){};
-    errdefer bits.deinit(alloc);
-    while (true) {
+    const max_bit_count = 32;
+    const Int = std.meta.Int(.unsigned, max_bit_count);
+    const Set = std.StaticBitSet(max_bit_count);
+
+    var bits_raw = std.ArrayListUnmanaged(Set){};
+    defer bits_raw.deinit(alloc);
+    for (range(h)) |_| {
         const word = try readWord(r, alloc);
         defer alloc.free(word);
-        if (std.mem.eql(u8, word, "ENDCHAR")) {
-            break;
-        }
-        try bits.append(alloc, std.StaticBitSet(16){ .mask = try std.fmt.parseUnsigned(u16, word, 16) });
+        assert(word.len <= 4);
+        const pad = try std.fmt.allocPrint(alloc, "{s:0>4}", .{word});
+        defer alloc.free(pad);
+        const int = try std.fmt.parseUnsigned(Int, pad, 16);
+        const set = Set{ .mask = int };
+        try bits_raw.append(alloc, set);
     }
+
+    var start: usize = max_bit_count;
+    for (bits_raw.items) |set| {
+        start = std.math.min(start, set.findFirstSet() orelse continue);
+    }
+    if (start == max_bit_count) start = 0;
+
+    var bits = std.ArrayListUnmanaged(bool){};
+    errdefer bits.deinit(alloc);
+    try bits.appendNTimes(alloc, false, w * h);
+    for (range(h)) |_, y| {
+        for (range(w)) |_, x| {
+            bits.items[extras.d2index(h, y, w - 1 - x)] = bits_raw.items[y].isSet(start + x);
+        }
+    }
+    try assertLine(r, alloc, "ENDCHAR");
 
     if (encoding == null) {
         alloc.free(name);

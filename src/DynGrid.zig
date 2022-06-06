@@ -3,6 +3,7 @@ const std = @import("std");
 const root = @import("root");
 const mag = @import("./main.zig");
 const range = @import("range").range;
+const extras = @import("extras");
 
 rows: u16,
 cols: u16,
@@ -33,7 +34,7 @@ pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) 
 }
 
 fn child(self: Self, col: u16, row: u16) mag.Node {
-    return self.children[(self.cols * row) + col];
+    return self.children[extras.d2index(self.cols, col, row)];
 }
 
 fn getMaxWidth(self: Self, app: root.App, col: u16) u32 {

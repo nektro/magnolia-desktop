@@ -25,7 +25,6 @@ irc client
 movies
 music
 news
-notepad
 notes
 paint.exe/paint.net
 password manager
@@ -37,6 +36,7 @@ rss client
 spotify client
 steam client
 stocks
+text editor + ide
 torrent client
 tv shows
 voice memo

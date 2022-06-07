@@ -1,4 +1,5 @@
 # Magnolia
+![loc](https://sloc.xyz/github/nektro/magnolia-desktop)
 
 **Magnolia** is a new UI toolkit written entirely from scratch in Zig for Linux desktops.
 

@@ -31,7 +31,7 @@ const Client = struct {
     pub fn postinit(self: *Client, app: *App) !void {
         self.font = try mag.bdf.parse(app.alloc, "Cozette/cozette.bdf");
 
-        self.child = try mag.DynGrid.new(app, .{ 11, 1, .{ .margin = 50, .font = &self.font }, &.{
+        self.child = try mag.DynGrid.new(app, .{ 9, 1, .{ .margin = 50, .font = &self.font }, &.{
             try mag.TextLine.new(app, .{ .{}, "Cozette v.1.13.0" }),
             try mag.TextLine.new(app, .{ .{}, " " }),
             try mag.TextLine.new(app, .{ .{}, "Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz" }),
@@ -41,8 +41,6 @@ const Client = struct {
             try mag.TextLine.new(app, .{ .{}, "The quick brown fox jumps over the lazy dog." }),
             try mag.TextLine.new(app, .{ .{}, " " }),
             try mag.TextLine.new(app, .{ .{}, "! @ # $ % ^ & * ( ) : ; [ ] { } \" ' - = _ + ` ~ < > / ? , ." }),
-            try mag.TextLine.new(app, .{ .{}, " " }),
-            try mag.TextLine.new(app, .{ .{}, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." }),
         } });
         app.cascadeNodeStyles(null, self.child.?);
     }

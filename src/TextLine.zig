@@ -12,10 +12,6 @@ usingnamespace mag.MixinNodeInit(Self);
 const scale = 2;
 
 pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) !void {
-    _ = self;
-    _ = app;
-    _ = x;
-    _ = y;
     _ = width;
     _ = height;
 

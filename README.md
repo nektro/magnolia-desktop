@@ -16,6 +16,10 @@ Source-Available, All rights reserved. (c) 2022 Meghan Denny
 
 [Cozette](https://github.com/slavfox/Cozette) font, MIT. (c) 2020 Slavfox
 
+## Credits
+- Zig master
+- See [`zig.mod`](./zig.mod) and [`zigmod.lock`](./zigmod.lock)
+
 ## Building
 
 Magnolia is built using the Zig build system. To see all available build options run `zig build --help`.

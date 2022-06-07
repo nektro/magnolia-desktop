@@ -30,17 +30,18 @@ pub fn App(comptime Elements: []const type) type {
     };
     const AllElements = Builtins ++ Elements[1..];
     return struct {
+        win_width: u32 = 800,
+        win_height: u32 = 600,
+        center: Point = .{ .x = 400, .y = 300 },
+        active: bool = false,
+        nodes: std.AutoHashMapUnmanaged(Node, NodeItem) = .{},
+        types: std.AutoHashMapUnmanaged(Node, u32) = .{},
+
         display: x11.Display,
         visual: glx.Visual,
         window: x11.Window,
         client: Client,
-        win_width: u32,
-        win_height: u32,
-        center: Point,
-        active: bool,
         alloc: std.mem.Allocator,
-        nodes: std.AutoHashMapUnmanaged(Node, NodeItem),
-        types: std.AutoHashMapUnmanaged(Node, u32),
 
         const Self = @This();
 
@@ -69,13 +70,7 @@ pub fn App(comptime Elements: []const type) type {
                 .visual = visual,
                 .window = window,
                 .client = client,
-                .win_width = 800,
-                .win_height = 600,
-                .center = .{ .x = 400, .y = 300 },
-                .active = false,
                 .alloc = alloc,
-                .nodes = .{},
-                .types = .{},
             };
         }
 

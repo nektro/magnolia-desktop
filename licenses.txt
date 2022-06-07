@@ -1,0 +1,4 @@
+MIT:
+= https://spdx.org/licenses/MIT
+- git https://github.com/nektro/zig-extras
+- git https://github.com/nektro/zig-range

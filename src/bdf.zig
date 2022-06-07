@@ -78,7 +78,12 @@ pub const Char = struct {
     height: u8,
     ll_x: i8,
     ll_y: i8,
-    bits: []const bool,
+    start: u8,
+    bits: []const Set,
+
+    const max_bit_count = 32;
+    const Int = std.meta.Int(.unsigned, max_bit_count);
+    const Set = std.StaticBitSet(max_bit_count);
 };
 
 pub fn parse(alloc: std.mem.Allocator, path: string) !Font {
@@ -242,37 +247,25 @@ fn parseChar(r: anytype, alloc: std.mem.Allocator) !?Char {
     const ll_y = try readInt(r, alloc, i8);
 
     try assertLine(r, alloc, "BITMAP");
-    const max_bit_count = 32;
-    const Int = std.meta.Int(.unsigned, max_bit_count);
-    const Set = std.StaticBitSet(max_bit_count);
 
-    var bits_raw = std.ArrayListUnmanaged(Set){};
-    defer bits_raw.deinit(alloc);
+    var bits = std.ArrayListUnmanaged(Char.Set){};
+    errdefer bits.deinit(alloc);
     for (range(h)) |_| {
         const word = try readWord(r, alloc);
         defer alloc.free(word);
         assert(word.len <= 4);
         const pad = try std.fmt.allocPrint(alloc, "{s:0>4}", .{word});
         defer alloc.free(pad);
-        const int = try std.fmt.parseUnsigned(Int, pad, 16);
-        const set = Set{ .mask = int };
-        try bits_raw.append(alloc, set);
+        const int = try std.fmt.parseUnsigned(Char.Int, pad, 16);
+        const set = Char.Set{ .mask = int };
+        try bits.append(alloc, set);
     }
 
-    var start: usize = max_bit_count;
-    for (bits_raw.items) |set| {
+    var start: usize = Char.max_bit_count;
+    for (bits.items) |set| {
         start = std.math.min(start, set.findFirstSet() orelse continue);
     }
-    if (start == max_bit_count) start = 0;
-
-    var bits = std.ArrayListUnmanaged(bool){};
-    errdefer bits.deinit(alloc);
-    try bits.appendNTimes(alloc, false, w * h);
-    for (range(h)) |_, y| {
-        for (range(w)) |_, x| {
-            bits.items[extras.d2index(h, y, w - 1 - x)] = bits_raw.items[y].isSet(start + x);
-        }
-    }
+    if (start == Char.max_bit_count) start = 0;
     try assertLine(r, alloc, "ENDCHAR");
 
     if (encoding == null) {
@@ -282,7 +275,7 @@ fn parseChar(r: anytype, alloc: std.mem.Allocator) !?Char {
     }
     // TODO make this use .{
     // error: expected type 'std.meta.struct:1069:19', found '.magnolia.bdf.struct:216:41'
-    return extras.positionalInit(Char, extras.FieldsTuple(Char){ name, encoding.?, swidthx, swidthy, dwidthx, dwidthy, w, h, ll_x, ll_y, bits.toOwnedSlice(alloc) });
+    return extras.positionalInit(Char, extras.FieldsTuple(Char){ name, encoding.?, swidthx, swidthy, dwidthx, dwidthy, w, h, ll_x, ll_y, @intCast(u8, start), bits.toOwnedSlice(alloc) });
 }
 
 //

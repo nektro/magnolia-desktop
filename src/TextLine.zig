@@ -30,7 +30,7 @@ pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) 
 
         for (range(char.height * scale)) |_, py| {
             for (range(char.width * scale)) |_, px| {
-                if (!char.bits[extras.d2index(char.height, py / scale, px / scale)]) continue;
+                if (!char.bits[py / scale].isSet(char.width - 1 - (px / scale) + char.start)) continue;
                 try pts.append(mag.gl.vertexp(
                     add(x, cx) + dx + @intCast(u32, px),
                     add(y, cy) + @intCast(u32, py),

@@ -22,6 +22,16 @@ flight tracker    https://flightaware.com/live/
 font explorer
 git client
 github client
+health
+    heart rate
+        bpm
+        afib detection
+    blood oxygen level
+    sleep
+    medications           (reminders and interactions)
+    fitness
+    menstrual cycle tracker
+    nutrient + calorie tracker
 irc client
 movies
 music

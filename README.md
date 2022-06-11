@@ -1,7 +1,7 @@
 # Magnolia
 ![loc](https://sloc.xyz/github/nektro/magnolia-desktop)
 
-**Magnolia** is a new UI toolkit written entirely from scratch in Zig for Linux desktops.
+**Magnolia** is a new UI toolkit written entirely from scratch in Zig for Linux desktops. It has a focus on ease-of-use, performance, and supporting older devices.
 
 The only runtime system dependencies are X11 and OpenGL.
 

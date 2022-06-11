@@ -13,6 +13,7 @@ pub const ForNode = struct {
 
     font: ?*mag.Font = null,
     fontScale: u8 = 1,
+    fontColor: mag.Color = mag.Color.parseConst("#000000"),
 
     pub fn calcMargin(self: ForNode) Box {
         return .{
@@ -27,10 +28,11 @@ pub const ForNode = struct {
         const cascading_styles = [_]std.meta.FieldEnum(ForNode){
             .font,
             .fontScale,
+            .fontColor,
         };
         inline for (cascading_styles) |sty| {
             const field = std.meta.fieldInfo(ForNode, sty);
-            if (@field(self, @tagName(sty)) == extras.ptrCastConst(field.field_type, field.default_value.?).*) {
+            if (eql(field.field_type, @field(self, @tagName(sty)), extras.ptrCastConst(field.field_type, field.default_value.?).*)) {
                 @field(self, @tagName(sty)) = @field(with, @tagName(sty));
             }
         }
@@ -55,4 +57,14 @@ pub const Box = struct {
 
 fn o(x: u32) ?u32 {
     return if (x > 0) x else null;
+}
+
+fn eql(comptime T: type, a: T, b: T) bool {
+    return switch (@typeInfo(T)) {
+        .Int => a == b,
+        .Optional => a == b,
+        .Pointer => a == b,
+        .Struct => a.eql(b),
+        else => @compileError("unreachable"),
+    };
 }

@@ -18,6 +18,7 @@ pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) 
     const fh = font.properties.ints.get("CAP_HEIGHT").? + 1;
     const min_width = @intCast(u8, font.properties.ints.get("FIGURE_WIDTH").?);
     const scale = self.style.fontScale;
+    const color = self.style.fontColor;
 
     var pts = std.ArrayList(mag.gl.Path.Item).init(app.alloc);
     defer pts.deinit();
@@ -39,7 +40,7 @@ pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) 
         }
         dx += std.math.max(char.width, min_width) * scale;
     }
-    mag.gl.color3(0, 0, 0);
+    mag.gl.color3(color.r, color.g, color.b);
     mag.gl.drawPoints(pts.items);
 }
 

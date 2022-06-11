@@ -15,3 +15,7 @@ pub fn parseConst(comptime inp: *const [7:0]u8) Self {
         .b = comptime @intToFloat(f32, std.fmt.parseInt(u8, inp[5..7], 16) catch unreachable) / 255.0,
     };
 }
+
+pub fn eql(self: Self, other: Self) bool {
+    return self.r == other.r and self.g == other.g and self.b == other.b;
+}

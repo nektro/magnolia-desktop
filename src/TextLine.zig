@@ -9,7 +9,6 @@ style: mag.style.ForNode,
 text: []const u8,
 
 usingnamespace mag.MixinNodeInit(Self);
-const scale = 2;
 
 pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) !void {
     _ = width;
@@ -18,6 +17,7 @@ pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) 
     const font = self.style.font.?;
     const fh = font.properties.ints.get("CAP_HEIGHT").? + 1;
     const min_width = @intCast(u8, font.properties.ints.get("FIGURE_WIDTH").?);
+    const scale = self.style.fontScale;
 
     var pts = std.ArrayList(mag.gl.Path.Item).init(app.alloc);
     defer pts.deinit();
@@ -25,8 +25,8 @@ pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) 
     var dx: u32 = 0;
     while (iter.nextCodepoint()) |cp| {
         const char = font.getChar(@intCast(u16, cp));
-        const cx = (char.ll_x - 1) * scale;
-        const cy = (-char.ll_y + fh - char.height) * scale;
+        const cx = (char.ll_x - 1) * @as(i9, scale);
+        const cy = (-char.ll_y + fh - char.height) * @as(i9, scale);
 
         for (range(char.height * scale)) |_, py| {
             for (range(char.width * scale)) |_, px| {
@@ -53,6 +53,7 @@ fn add(a: u32, b: i32) u32 {
 pub fn getWidth(self: Self, app: root.App) u32 {
     _ = app;
     const font = self.style.font.?;
+    const scale = self.style.fontScale;
     const min_width = @intCast(u8, font.properties.ints.get("FIGURE_WIDTH").?);
     var res: u32 = 0;
     var iter = std.unicode.Utf8View.initUnchecked(self.text).iterator();
@@ -65,5 +66,6 @@ pub fn getWidth(self: Self, app: root.App) u32 {
 
 pub fn getHeight(self: Self, app: root.App) u32 {
     _ = app;
+    const scale = self.style.fontScale;
     return self.style.font.?.h * scale;
 }

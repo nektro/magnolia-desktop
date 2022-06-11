@@ -12,6 +12,7 @@ pub const ForNode = struct {
     bgcolor: ?mag.Color = null,
 
     font: ?*mag.Font = null,
+    fontScale: u8 = 1,
 
     pub fn calcMargin(self: ForNode) Box {
         return .{
@@ -25,6 +26,7 @@ pub const ForNode = struct {
     pub fn merge(self: *ForNode, with: ForNode) void {
         const cascading_styles = [_]std.meta.FieldEnum(ForNode){
             .font,
+            .fontScale,
         };
         inline for (cascading_styles) |sty| {
             const field = std.meta.fieldInfo(ForNode, sty);

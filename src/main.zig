@@ -225,6 +225,8 @@ pub fn App(comptime Elements: []const type) type {
                 if (self.types.get(node).? == j) {
                     const elem = extras.ptrCast(T, self.nodes.get(node).?);
                     const margin = elem.style.calcMargin();
+                    const w = elem.getWidth(self);
+                    const h = elem.getHeight(self);
 
                     const t = margin.top;
                     const l = margin.left;
@@ -232,8 +234,8 @@ pub fn App(comptime Elements: []const type) type {
                     const r = margin.right;
                     Rect.drawAbs(
                         .{
-                            .width = width - margin.left - margin.right,
-                            .height = height - margin.top - margin.bottom,
+                            .width = if (w > 0) w else width - margin.left - margin.right,
+                            .height = if (h > 0) h else height - margin.top - margin.bottom,
                             .style = .{},
                         },
                         .{

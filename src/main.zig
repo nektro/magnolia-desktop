@@ -280,19 +280,19 @@ pub fn App(comptime Elements: []const type) type {
             return extras.ptrCast(T, self.nodes.items[@enumToInt(node)]);
         }
 
-        pub fn getNodeWidth(self: Self, node: Node) u32 {
+        pub fn getNodeMinWidth(self: Self, node: Node) u32 {
             inline for (AllElements) |T, j| {
                 if (self.types.get(node).? == j) {
-                    return extras.ptrCast(T, self.nodes.get(node).?).getWidth(self);
+                    return extras.ptrCast(T, self.nodes.get(node).?).getMinWidth(self);
                 }
             }
             unreachable;
         }
 
-        pub fn getNodeHeight(self: Self, node: Node) u32 {
+        pub fn getNodeMinHeight(self: Self, node: Node) u32 {
             inline for (AllElements) |T, j| {
                 if (self.types.get(node).? == j) {
-                    return extras.ptrCast(T, self.nodes.get(node).?).getHeight(self);
+                    return extras.ptrCast(T, self.nodes.get(node).?).getMinHeight(self);
                 }
             }
             unreachable;
@@ -341,6 +341,30 @@ pub fn MixinNodeInit(comptime T: type) type {
                     alloc.free(@field(self, item.name));
                 }
             }
+        }
+    };
+}
+
+pub fn MixinNodeMinWidthChildSum(comptime T: type) type {
+    return struct {
+        pub fn getMinWidth(self: T, app: root.App) u32 {
+            var ret: u32 = 0;
+            for (self.children) |child| {
+                ret = std.math.max(ret, app.getNodeMinWidth(child));
+            }
+            return ret;
+        }
+    };
+}
+
+pub fn MixinNodeMinHeightChildSum(comptime T: type) type {
+    return struct {
+        pub fn getMinHeight(self: T, app: root.App) u32 {
+            var ret: u32 = 0;
+            for (self.children) |child| {
+                ret = std.math.max(ret, app.getNodeMinHeight(child));
+            }
+            return ret;
         }
     };
 }

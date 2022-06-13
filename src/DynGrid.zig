@@ -40,7 +40,7 @@ fn child(self: Self, col: u16, row: u16) mag.Node {
 fn getMaxWidth(self: Self, app: root.App, col: u16) u32 {
     var ret: u32 = 0;
     for (range(self.rows)) |_, r| {
-        ret = std.math.max(ret, app.getNodeWidth(self.child(col, @intCast(u16, r))));
+        ret = std.math.max(ret, app.getNodeMinWidth(self.child(col, @intCast(u16, r))));
     }
     return ret;
 }
@@ -48,12 +48,12 @@ fn getMaxWidth(self: Self, app: root.App, col: u16) u32 {
 fn getMaxHeight(self: Self, app: root.App, row: u16) u32 {
     var ret: u32 = 0;
     for (range(self.cols)) |_, c| {
-        ret = std.math.max(ret, app.getNodeHeight(self.child(@intCast(u16, c), row)));
+        ret = std.math.max(ret, app.getNodeMinHeight(self.child(@intCast(u16, c), row)));
     }
     return ret;
 }
 
-pub fn getWidth(self: Self, app: root.App) u32 {
+pub fn getMinWidth(self: Self, app: root.App) u32 {
     var ret: u32 = 0;
     for (range(self.cols)) |_, c| {
         ret = std.math.max(ret, self.getMaxWidth(app, @intCast(u16, c)));
@@ -61,7 +61,7 @@ pub fn getWidth(self: Self, app: root.App) u32 {
     return ret;
 }
 
-pub fn getHeight(self: Self, app: root.App) u32 {
+pub fn getMinHeight(self: Self, app: root.App) u32 {
     var ret: u32 = 0;
     for (range(self.rows)) |_, r| {
         ret = std.math.max(ret, self.getMaxHeight(app, @intCast(u16, r)));

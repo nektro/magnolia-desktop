@@ -25,14 +25,5 @@ pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) 
     }
 }
 
-pub fn getWidth(self: Self, app: root.App) u32 {
-    _ = self;
-    _ = app;
-    std.debug.todo("StrictGrid.getWidth");
-}
-
-pub fn getHeight(self: Self, app: root.App) u32 {
-    _ = self;
-    _ = app;
-    std.debug.todo("StrictGrid.getHeight");
-}
+pub usingnamespace mag.MixinNodeMinWidthChildSum(Self);
+pub usingnamespace mag.MixinNodeMinHeightChildSum(Self);

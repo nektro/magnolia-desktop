@@ -39,12 +39,12 @@ pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) 
     drawAbs(copy, .{ .x = x, .y = y }, null);
 }
 
-pub fn getWidth(self: Self, app: root.App) u32 {
+pub fn getMinWidth(self: Self, app: root.App) u32 {
     _ = app;
     return self.width;
 }
 
-pub fn getHeight(self: Self, app: root.App) u32 {
+pub fn getMinHeight(self: Self, app: root.App) u32 {
     _ = app;
     return self.height;
 }

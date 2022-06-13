@@ -51,7 +51,7 @@ fn add(a: u32, b: i32) u32 {
     return a - @intCast(u31, -b);
 }
 
-pub fn getWidth(self: Self, app: root.App) u32 {
+pub fn getMinWidth(self: Self, app: root.App) u32 {
     _ = app;
     const font = self.style.font.?;
     const scale = self.style.fontScale;
@@ -65,7 +65,7 @@ pub fn getWidth(self: Self, app: root.App) u32 {
     return res * scale;
 }
 
-pub fn getHeight(self: Self, app: root.App) u32 {
+pub fn getMinHeight(self: Self, app: root.App) u32 {
     _ = app;
     const scale = self.style.fontScale;
     return self.style.font.?.h * scale;

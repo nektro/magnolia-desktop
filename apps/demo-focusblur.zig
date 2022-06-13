@@ -52,8 +52,6 @@ pub fn main() !void {
     defer app.deinit();
 
     try app.start(mag.Color.parseConst("#000000"));
-
     try app.draw();
-
     try app.run();
 }

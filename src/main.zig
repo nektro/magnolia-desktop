@@ -1,4 +1,5 @@
 const std = @import("std");
+const string = []const u8;
 const root = @import("root");
 const extras = @import("extras");
 
@@ -47,7 +48,7 @@ pub fn App(comptime Elements: []const type) type {
 
         var nextId: u32 = 0;
 
-        pub fn init(alloc: std.mem.Allocator, client: Client) !Self {
+        pub fn init(alloc: std.mem.Allocator, client: Client, width: u32, height: u32, title: string) !Self {
             // Open the display
             const display = try x11.Display.init();
 
@@ -63,7 +64,7 @@ pub fn App(comptime Elements: []const type) type {
             const visual = try glx.Visual.init(display);
 
             // Open the window
-            const window = try x11.Window.init(display, visual);
+            const window = try x11.Window.init(display, visual, width, height, title);
 
             return Self{
                 .display = display,

@@ -1,5 +1,5 @@
 const std = @import("std");
-
+const string = []const u8;
 const c = @import("./c.zig");
 const glx = @import("./glx.zig");
 
@@ -57,7 +57,7 @@ pub const Window = struct {
     window: c.Window,
     atom: c.Atom,
 
-    pub fn init(xdisplay: Display, xvisual: glx.Visual) !Window {
+    pub fn init(xdisplay: Display, xvisual: glx.Visual, width: u32, height: u32, title: string) !Window {
         const dpy = xdisplay.display;
 
         var attribs: c.XSetWindowAttributes = undefined;
@@ -69,12 +69,16 @@ pub const Window = struct {
         attribs.event_mask = c.ExposureMask;
 
         // TODO: handle C error
-        const win = c.XCreateWindow(xdisplay.display, xdisplay.rootWindow(), 0, 0, 800, 600, 0, xvisual.info.*.depth, c.InputOutput, xvisual.visual, c.CWBackPixel | c.CWColormap | c.CWBorderPixel | c.CWEventMask, &attribs);
+        const win = c.XCreateWindow(xdisplay.display, xdisplay.rootWindow(), 0, 0, width, height, 0, xvisual.info.*.depth, c.InputOutput, xvisual.visual, c.CWBackPixel | c.CWColormap | c.CWBorderPixel | c.CWEventMask, &attribs);
 
         // allow X to intercept user hitting window 'close' button
         // TODO: handle C error
         var atom = c.XInternAtom(dpy, "WM_DELETE_WINDOW", 0);
         _ = c.XSetWMProtocols(dpy, win, &atom, 1);
+
+        // set window title
+        // TODO: handle C error
+        _ = c.XStoreName(dpy, win, title.ptr);
 
         // Create GLX OpenGL context
         // TODO: maybe move this to glx namespace

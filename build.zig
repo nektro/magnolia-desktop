@@ -31,9 +31,13 @@ pub fn build(b: *std.build.Builder) void {
         const name = item[0];
         const root_src = item[1];
 
+        const options = b.addOptions();
+        options.addOption(string, "name", "magnolia-" ++ name);
+
         const exe = b.addExecutable("magnolia-" ++ name, root_src);
         exe.setTarget(target);
         exe.setBuildMode(mode);
+        exe.addOptions("build_options", options);
         deps.addAllTo(exe);
 
         if (strip) exe.strip = true;

@@ -1,5 +1,6 @@
 const std = @import("std");
 const mag = @import("magnolia");
+const build_options = @import("build_options");
 const gl = mag.gl;
 
 const App = mag.App(&.{Client});
@@ -37,7 +38,7 @@ const Client = struct {
 };
 
 pub fn main() !void {
-    var app = try App.init(undefined, Client.init());
+    var app = try App.init(undefined, Client.init(), 800, 600, build_options.name);
     defer app.deinit();
 
     try app.start(mag.Color.parseConst("#000000"));

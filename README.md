@@ -47,3 +47,4 @@ Pull in the Zig dependencies by running `zigmod ci`.
 - `demo-layout2`
 - `demo-margin`
 - `demo-text`
+- `demo-centersquare2`

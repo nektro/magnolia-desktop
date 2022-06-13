@@ -17,3 +17,14 @@ pub fn draw(self: Self, app: root.App, x: u32, y: u32, width: u32, height: u32) 
 
 pub usingnamespace mag.MixinNodeMinWidthChildSum(Self);
 pub usingnamespace mag.MixinNodeMinHeightChildSum(Self);
+
+pub fn getWidth(self: Self, app: root.App, available: u32) u32 {
+    _ = self;
+    _ = app;
+    return available;
+}
+pub fn getHeight(self: Self, app: root.App, available: u32) u32 {
+    _ = self;
+    _ = app;
+    return available;
+}

@@ -48,3 +48,12 @@ pub fn getMinHeight(self: Self, app: root.App) u32 {
     _ = app;
     return self.height;
 }
+
+pub fn getWidth(self: Self, app: root.App, available: u32) u32 {
+    _ = app;
+    return if (self.width == 0) available else self.width;
+}
+pub fn getHeight(self: Self, app: root.App, available: u32) u32 {
+    _ = app;
+    return if (self.height == 0) available else self.height;
+}

@@ -226,8 +226,8 @@ pub fn App(comptime Elements: []const type) type {
                 if (self.types.get(node).? == j) {
                     const elem = extras.ptrCast(T, self.nodes.get(node).?);
                     const margin = elem.style.calcMargin();
-                    const w = elem.getWidth(self);
-                    const h = elem.getHeight(self);
+                    const w = elem.getWidth(self, width);
+                    const h = elem.getHeight(self, height);
 
                     const t = margin.top;
                     const l = margin.left;

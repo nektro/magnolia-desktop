@@ -70,3 +70,14 @@ pub fn getMinHeight(self: Self, app: root.App) u32 {
     const scale = self.style.fontScale;
     return self.style.font.?.h * scale;
 }
+
+pub fn getWidth(self: Self, app: root.App, available: u32) u32 {
+    _ = self;
+    _ = app;
+    return available;
+}
+pub fn getHeight(self: Self, app: root.App, available: u32) u32 {
+    _ = self;
+    _ = app;
+    return available;
+}

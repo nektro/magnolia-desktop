@@ -2,18 +2,14 @@ const std = @import("std");
 const string = []const u8;
 const deps = @import("./deps.zig");
 
-var doall: bool = false;
-var dorun: bool = false;
-var strip: bool = false;
-
 pub fn build(b: *std.build.Builder) void {
     const target = b.standardTargetOptions(.{});
 
     const mode = b.standardReleaseOptions();
 
-    doall = b.option(bool, "all", "Build all apps, default only selected steps") orelse false;
-    dorun = b.option(bool, "run", "Run the app too") orelse false;
-    strip = b.option(bool, "strip", "Strip debug symbols") orelse false;
+    const doall = b.option(bool, "all", "Build all apps, default only selected steps") orelse false;
+    const dorun = b.option(bool, "run", "Run the app too") orelse false;
+    const strip = b.option(bool, "strip", "Strip debug symbols") orelse false;
 
     const exes: []const [2]string = &.{
         .{ "triangle", "apps/triangle.zig" },

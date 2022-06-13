@@ -32,6 +32,7 @@ health
     fitness
     menstrual cycle tracker
     nutrient + calorie tracker
+    immunization recorder
 irc client
 movies
 music
@@ -44,6 +45,7 @@ podcasts
 reddit client
 reminders/todo list
 rss client
+sports
 spotify client
 steam client
 stocks
@@ -71,6 +73,8 @@ system utilities
     systemctl frontend
     docker ps frontend
     ELF viewer/analyzer
+    screen time
+    battery monitor
 
 games
     2048

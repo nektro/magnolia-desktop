@@ -7,7 +7,7 @@ pub const App = mag.App(&.{
 });
 
 pub fn main() !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    var gpa = std.heap.GeneralPurposeAllocator(.{ .stack_trace_frames = 8 }){};
     defer std.debug.assert(!gpa.deinit());
     const alloc = gpa.allocator();
 

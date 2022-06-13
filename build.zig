@@ -15,36 +15,41 @@ pub fn build(b: *std.build.Builder) void {
     dorun = b.option(bool, "run", "Run the app too") orelse false;
     strip = b.option(bool, "strip", "Strip debug symbols") orelse false;
 
-    addExe(b, target, mode, "triangle", "apps/triangle.zig");
-    addExe(b, target, mode, "demo-centersquare", "apps/demo-centersquare.zig");
-    addExe(b, target, mode, "demo-focusblur", "apps/demo-focusblur.zig");
-    addExe(b, target, mode, "triangle-raw", "apps/triangle-raw.zig"); // temp for debugging
-    addExe(b, target, mode, "demo-layout", "apps/demo-layout.zig");
-    addExe(b, target, mode, "demo-layout2", "apps/demo-layout2.zig");
-    addExe(b, target, mode, "demo-margin", "apps/demo-margin.zig");
-    addExe(b, target, mode, "demo-text", "apps/demo-text.zig");
-    addExe(b, target, mode, "demo-centersquare2", "apps/demo-centersquare2.zig");
-}
+    const exes: []const [2]string = &.{
+        .{ "triangle", "apps/triangle.zig" },
+        .{ "demo-centersquare", "apps/demo-centersquare.zig" },
+        .{ "demo-focusblur", "apps/demo-focusblur.zig" },
+        .{ "triangle-raw", "apps/triangle-raw.zig" }, // temp for debugging
+        .{ "demo-layout", "apps/demo-layout.zig" },
+        .{ "demo-layout2", "apps/demo-layout2.zig" },
+        .{ "demo-margin", "apps/demo-margin.zig" },
+        .{ "demo-text", "apps/demo-text.zig" },
+        .{ "demo-centersquare2", "apps/demo-centersquare2.zig" },
+    };
 
-fn addExe(b: *std.build.Builder, target: std.zig.CrossTarget, mode: std.builtin.Mode, comptime name: string, root_src: string) void {
-    const exe = b.addExecutable("magnolia-" ++ name, root_src);
-    exe.setTarget(target);
-    exe.setBuildMode(mode);
-    deps.addAllTo(exe);
+    inline for (exes) |item| {
+        const name = item[0];
+        const root_src = item[1];
 
-    if (strip) exe.strip = true;
-    const install_step = &b.addInstallArtifact(exe).step;
-    if (doall) b.getInstallStep().dependOn(install_step);
+        const exe = b.addExecutable("magnolia-" ++ name, root_src);
+        exe.setTarget(target);
+        exe.setBuildMode(mode);
+        deps.addAllTo(exe);
 
-    const build_step = b.step(name, "Build the " ++ name ++ " app");
-    build_step.dependOn(install_step);
+        if (strip) exe.strip = true;
+        const install_step = &b.addInstallArtifact(exe).step;
+        if (doall) b.getInstallStep().dependOn(install_step);
 
-    if (dorun) {
-        const run_cmd = exe.run();
-        run_cmd.step.dependOn(b.getInstallStep());
-        if (b.args) |args| {
-            run_cmd.addArgs(args);
+        const build_step = b.step(name, "Build the " ++ name ++ " app");
+        build_step.dependOn(install_step);
+
+        if (dorun) {
+            const run_cmd = exe.run();
+            run_cmd.step.dependOn(b.getInstallStep());
+            if (b.args) |args| {
+                run_cmd.addArgs(args);
+            }
+            build_step.dependOn(&run_cmd.step);
         }
-        build_step.dependOn(&run_cmd.step);
     }
 }

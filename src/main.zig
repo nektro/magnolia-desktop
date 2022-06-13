@@ -239,8 +239,16 @@ pub fn App(comptime Elements: []const type) type {
                             .style = .{},
                         },
                         .{
-                            .x = x + margin.top,
-                            .y = y + margin.left,
+                            .x = switch (elem.style.halign) {
+                                .left => x + margin.left,
+                                .center => (x + width) / 2 - (w / 2),
+                                .right => x + width - margin.right - w,
+                            },
+                            .y = switch (elem.style.valign) {
+                                .top => y + margin.top,
+                                .center => (y + height) / 2 - (h / 2),
+                                .bottom => y + height - margin.bottom - h,
+                            },
                         },
                         elem.style.bgcolor,
                     );

@@ -10,6 +10,8 @@ pub const ForNode = struct {
     lmargin: u32 = 0,
     rmargin: u32 = 0,
     bgcolor: ?mag.Color = null,
+    halign: enum { left, center, right } = .left,
+    valign: enum { top, center, bottom } = .top,
 
     font: ?*mag.Font = null,
     fontScale: u8 = 1,

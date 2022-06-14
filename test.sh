@@ -12,3 +12,4 @@ time zig build --prominent-compile-errors -Dall -Drelease-safe
 ./zig-out/bin/magnolia-demo-margin
 ./zig-out/bin/magnolia-demo-text
 ./zig-out/bin/magnolia-demo-centersquare2
+./zig-out/bin/magnolia-demo-text2

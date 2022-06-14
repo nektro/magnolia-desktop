@@ -21,6 +21,7 @@ pub fn build(b: *std.build.Builder) void {
         .{ "demo-margin", "apps/demo-margin.zig" },
         .{ "demo-text", "apps/demo-text.zig" },
         .{ "demo-centersquare2", "apps/demo-centersquare2.zig" },
+        .{ "demo-text2", "apps/demo-text2.zig" },
     };
 
     inline for (exes) |item| {

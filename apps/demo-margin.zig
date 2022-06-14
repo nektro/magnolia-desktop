@@ -1,4 +1,5 @@
 const std = @import("std");
+const builtin = @import("builtin");
 const mag = @import("magnolia");
 const build_options = @import("build_options");
 
@@ -9,7 +10,7 @@ pub const App = mag.App(&.{
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{ .stack_trace_frames = 8 }){};
     defer std.debug.assert(!gpa.deinit());
-    const alloc = gpa.allocator();
+    const alloc = if (builtin.mode == .Debug) gpa.allocator() else std.heap.c_allocator;
 
     var app = try App.init(alloc, .{}, 800, 600, build_options.name);
     defer app.deinit();

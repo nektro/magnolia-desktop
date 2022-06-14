@@ -248,6 +248,7 @@ fn parseChar(r: anytype, alloc: std.mem.Allocator) !?Char {
 
     try assertLine(r, alloc, "BITMAP");
 
+    var start: usize = Char.max_bit_count;
     var bits = std.ArrayListUnmanaged(Char.Set){};
     errdefer bits.deinit(alloc);
     for (range(h)) |_| {
@@ -259,10 +260,6 @@ fn parseChar(r: anytype, alloc: std.mem.Allocator) !?Char {
         const int = try std.fmt.parseUnsigned(Char.Int, pad, 16);
         const set = Char.Set{ .mask = int };
         try bits.append(alloc, set);
-    }
-
-    var start: usize = Char.max_bit_count;
-    for (bits.items) |set| {
         start = std.math.min(start, set.findFirstSet() orelse continue);
     }
     if (start == Char.max_bit_count) start = 0;

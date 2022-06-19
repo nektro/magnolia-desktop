@@ -30,7 +30,7 @@ const Client = struct {
     }
 
     pub fn postinit(self: *Client, app: *App) !void {
-        self.font = try mag.bdf.parse(app.alloc, "Cozette/cozette.bdf");
+        self.font = try mag.bdf.parse(app.alloc, build_options.font);
 
         self.child = try mag.DynGrid.new(app, .{ 1, 1, .{ .margin = 10, .font = &self.font, .fontScale = 2 }, &.{
             try mag.TextFlow.new(app, .{ .{}, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." }),

@@ -30,6 +30,7 @@ pub fn build(b: *std.build.Builder) void {
 
         const options = b.addOptions();
         options.addOption(string, "name", "magnolia-" ++ name);
+        options.addOption(string, "font", "Cozette/cozette.bdf");
 
         const exe = b.addExecutable("magnolia-" ++ name, root_src);
         exe.setTarget(target);

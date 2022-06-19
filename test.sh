@@ -2,7 +2,7 @@
 
 set -e
 
-time zig build --prominent-compile-errors -Dall -Drelease-safe
+time zig build --prominent-compile-errors -Dall $@
 
 ./zig-out/bin/magnolia-triangle
 ./zig-out/bin/magnolia-demo-centersquare

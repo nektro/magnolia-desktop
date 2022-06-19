@@ -11,9 +11,7 @@ pub fn main() !void {
     defer app.deinit();
 
     try app.start(mag.Color.parseConst("#000000"));
-
-    draw(app);
-
+    try app.draw();
     try app.run();
 }
 
@@ -24,17 +22,12 @@ const Client = struct {
         _ = y;
         _ = width;
         _ = height;
-        root.draw(app);
+        const w = app.win_width;
+        const h = app.win_height;
+        gl.draw(&.{
+            gl.vertexc(0, h, 1, 0, 0),
+            gl.vertexc(w / 2, 0, 0, 1, 0),
+            gl.vertexc(w, h, 0, 0, 1),
+        });
     }
 };
-
-fn draw(app: App) void {
-    _ = app;
-    const w = app.win_width;
-    const h = app.win_height;
-    gl.draw(&.{
-        gl.vertexc(0, h, 1, 0, 0),
-        gl.vertexc(w / 2, 0, 0, 1, 0),
-        gl.vertexc(w, h, 0, 0, 1),
-    });
-}
